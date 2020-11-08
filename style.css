@@ -87,7 +87,7 @@ audio {
     text-shadow: 2px 2px 14px #000000;
     text-align: center;
     width: 100%;
-    margin-bottom: 190px;
+    margin-bottom: 210px;
 }
 
 /* Home Stuff */
@@ -117,16 +117,6 @@ audio {
     color: white;
     padding: 7px;
     padding-left: 10px;
-}
-#Nachricht {
-    width: 100%;
-}
-#Nachricht p{
-    padding-bottom: 40px;
-
-}
-#Send {
-    margin-top: 40px;
 }
 
 
@@ -303,8 +293,100 @@ th {
     z-index: 100;
 }
 
+#first meter:first-of-type:hover {
+   opacity: 50%;
+}
+#first meter:last-of-type:hover {
+    opacity: 90%;
+}
 
+mark {
+    background-color: lightblue;
+    color: darkgrey;
+}
+/* Für 12 tags :3 */
 
+label {
+    font-size: 30px;
+    color: darkgray;
+}
+meter {
+    height: 50px;
+    width: 100%;
+}
+progress {
+    height: 50px;
+    width: 100%;
+}
+#gesch {
+    background-color: lightgray;
+    width: 100%;
+}
+#gesch > p {
+    font-size: 10px;
+
+}
+span {
+    color: pink;
+}
+input[type=text], select, input[type=email] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    background-color: lightgrey;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 20px;
+    color: white;
+}
+
+input[type=button] {
+    width: 50%;
+    margin: 8px 0;
+    padding: 10px;
+    display: inline-block;
+    background-color: lightgrey;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: left;
+    font-size: 20px;
+}
+option {
+    color: white;
+}
+
+::placeholder { 
+    color: white;
+}
+
+:-ms-input-placeholder {
+    color: white;
+} 
+::-ms-input-placeholder { 
+    color: white;
+}
+
+input[type="button"] {
+    color: white;
+}
+input[type="button"]:hover {
+    opacity: 70%;
+}
+
+#Nachricht {
+    width: 100%;
+    padding-bottom: 40px;
+}
+select > option {
+    color: blue;
+}
+option + option {
+    color: green;
+}
 
 /* Media Querries */
 
