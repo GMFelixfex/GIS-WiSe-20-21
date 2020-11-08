@@ -300,12 +300,12 @@ th {
     opacity: 90%;
 }
 
+/* Für 12 tags :3 */
+
 mark {
     background-color: lightblue;
     color: darkgrey;
 }
-/* Für 12 tags :3 */
-
 label {
     font-size: 30px;
     color: darkgray;
@@ -326,6 +326,7 @@ progress {
     font-size: 10px;
 
 }
+
 span {
     color: pink;
 }
@@ -355,7 +356,7 @@ input[type=button] {
     text-align: left;
     font-size: 20px;
 }
-option {
+select * {
     color: white;
 }
 
