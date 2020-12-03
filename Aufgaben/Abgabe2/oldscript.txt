@@ -1,0 +1,80 @@
+function defaultLoad(): void {
+    if (saveWaffel.length == 0 && (sitehandle() == "Waffel")) {
+        //defaultWaffel();
+        realWaffel();
+    }
+    if (saveTopping.length == 0 && (sitehandle() == "Belag")) {
+        //defaultTopping();
+        realTopping();
+    }
+    if (saveIce.length == 0 && (sitehandle() == "Eis")) {
+        //defaultIce();
+        realIce();
+    }
+    if (saveHolder.length == 0 && (sitehandle() == "Halter")) {
+        //defaultHolder();
+        realHolder();
+    }
+}
+
+function defaultWaffel(): void {
+    for (let i: number = 0; i < 12; i++) {
+        let newWaffel: Waffel = new Waffel("Waffel--" + i);
+        newWaffel.flexCreate();
+    }
+}
+function defaultTopping(): void {
+    for (let i: number = 0; i < 12; i++) {
+        let newTopping: Topping = new Topping("Topping--" + i);
+        newTopping.flexCreate();
+    }
+}
+function defaultIce(): void {
+    for (let i: number = 0; i < 12; i++) {
+        let newIce: Ice = new Ice("Ice--" + i);
+        newIce.flexCreate();
+    }
+}
+function defaultHolder(): void {
+    for (let i: number = 0; i < 12; i++) {
+        let newHolder: Holder = new Holder("Holder--" + i);
+        newHolder.flexCreate();
+    }
+}
+
+function realWaffel(): void {
+    let newWaffel: Waffel[] = [];
+    newWaffel[0] = new Waffel("Knuspertaler", 0.20, "Waffel", "../Abgabe2/Media/Waffel/1_Waffel.png");
+    newWaffel[1] = new Waffel("Knuspertaler", 0.20, "Waffel", "../Abgabe2/Media/Waffel/1_Waffel.png");
+    newWaffel[2] = new Waffel("Knuspertaler", 0.20, "Waffel", "../Abgabe2/Media/Waffel/1_Waffel.png");
+    for (let i: number = 0; i < newWaffel.length; i++) {
+        newWaffel[i].flexCreate();
+    }
+}
+function realTopping(): void {
+    let newTopping: Topping[] = [];
+    newTopping[0] = new Topping("Schokostreusel", 0.3, "Topping", "../Abgabe2/Media/Belag/1_Belag.png");
+    newTopping[1] = new Topping("Schokostreusel", 0.3, "Topping", "../Abgabe2/Media/Belag/1_Belag.png");
+    newTopping[2] = new Topping("Schokostreusel", 0.3, "Topping", "../Abgabe2/Media/Belag/1_Belag.png");
+    for (let i: number = 0; i < newTopping.length; i++) {
+        newTopping[i].flexCreate();
+    }
+}
+function realIce(): void {
+    let newIce: Ice[] = [];
+    newIce[0] = new Ice("Vanille", 1.0, "Ice", "../Abgabe2/Media/Eis/1_Eis.png");
+    newIce[1] = new Ice("Vanille", 1.0, "Ice", "../Abgabe2/Media/Eis/1_Eis.png");
+    newIce[2] = new Ice("Vanille", 1.0, "Ice", "../Abgabe2/Media/Eis/1_Eis.png");
+    for (let i: number = 0; i < newIce.length; i++) {
+        newIce[i].flexCreate();
+    }
+}
+function realHolder(): void {
+    let newHolder: Holder[] = [];
+    newHolder[0] = new Holder("Spitzwaffel", 0.1, "Holder", "../Abgabe2/Media/Halter/1_Halter.png");
+    newHolder[1] = new Holder("Spitzwaffel", 0.1, "Holder", "../Abgabe2/Media/Halter/1_Halter.png");
+    newHolder[2] = new Holder("Spitzwaffel", 0.1, "Holder", "../Abgabe2/Media/Halter/1_Halter.png");
+    for (let i: number = 0; i < newHolder.length; i++) {
+        newHolder[i].flexCreate();
+    }
+}
