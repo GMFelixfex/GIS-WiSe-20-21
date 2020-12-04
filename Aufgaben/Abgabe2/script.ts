@@ -1,23 +1,25 @@
 let hHead: HTMLHeadElement = document.head;
 let hBody: HTMLElement = document.body;
 
-let saveWaffel: Waffel[] = [];
-let saveTopping: Topping[] = [];
-let saveIce: Ice[] = [];
-let saveHolder: Holder[] = [];
+let saveWaffel: EisBase[] = [];
+let saveTopping: EisBase[] = [];
+let saveIce: EisBase[] = [];
+let saveHolder: EisBase[] = [];
+let partsString: string[] = ["Waffel", "Belag", "Eis", "Halter"];
 let selectedParts: number[] = [-1, -1, -1, -1];
 let curSite: string = "";
+let curSiteNumber: number = -1;
 
 let sendServer: ServerPaket;
 
 
 class ServerPaket {
-    waffel: Waffel;
-    belag: Topping;
-    eis: Ice;
-    halter: Holder;
+    waffel: EisBase;
+    belag: EisBase;
+    eis: EisBase;
+    halter: EisBase;
 
-    constructor(_waffel: Waffel, _belag: Topping, _eis: Ice, _halter: Holder) {
+    constructor(_waffel: EisBase, _belag: EisBase, _eis: EisBase, _halter: EisBase) {
         this.waffel = _waffel;
         this.belag = _belag;
         this.eis = _eis;
@@ -27,7 +29,7 @@ class ServerPaket {
 }
 
 let countw: number = 0;
-class Waffel {
+class EisBase {
     name: string;
     preis: number;
     stil: string;
@@ -46,9 +48,9 @@ class Waffel {
 
     public flexCreate(): void {
         let newElemnt: HTMLDivElement = document.createElement("div");
-        let divWaffel: HTMLElement = document.getElementById("divWaffel");
+        let divWaffel: HTMLElement = document.getElementById("divGen");
         divWaffel.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedWaffel");
+        newElemnt.setAttribute("class", "generated");
         newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
         saveWaffel[countw] = this;
         countw++;
@@ -57,108 +59,10 @@ class Waffel {
 
 }
 
-let countt: number = 0;
-class Topping {
-    name: string;
-    preis: number;
-    stil: string;
-    path: string;
-
-    constructor(_name?: string, _preis?: number, _stil?: string, _path?: string) {
-        if (_name === undefined) _name = "Namenlos";
-        if (_preis === undefined) _preis = 0;
-        if (_stil === undefined) _stil = "Topping";
-        if (_path === undefined) _path = "../Abgabe2/Media/default.png";
-        this.name = _name;
-        this.preis = _preis;
-        this.stil = _stil;
-        this.path = _path;
-
-    }
-    public flexCreate(): void {
-        let newElemnt: HTMLDivElement = document.createElement("div");
-        let divTopping: HTMLElement = document.getElementById("divTopping");
-        divTopping.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedTopping");
-        newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveTopping[countt] = this;
-        countt++;
-    }
-
-
-}
-
-let counti: number = 0;
-class Ice {
-    name: string;
-    preis: number;
-    stil: string;
-    path: string;
-
-
-
-    constructor(_name?: string, _preis?: number, _stil?: string, _path?: string) {
-        if (_name === undefined) _name = "Namenlos";
-        if (_preis === undefined) _preis = 0;
-        if (_stil === undefined) _stil = "Ice";
-        if (_path === undefined) _path = "../Abgabe2/Media/default.png";
-        this.name = _name;
-        this.preis = _preis;
-        this.stil = _stil;
-        this.path = _path;
-
-
-
-    }
-    public flexCreate(): void {
-        let newElemnt: HTMLDivElement = document.createElement("div");
-        let divIce: HTMLElement = document.getElementById("divIce");
-        divIce.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedIce");
-        newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveIce[counti] = this;
-        counti++;
-    }
-
-
-}
-
-let counth: number = 0;
-class Holder {
-    name: string;
-    preis: number;
-    stil: string;
-    path: string;
-
-
-    constructor(_name?: string, _preis?: number, _stil?: string, _path?: string) {
-        if (_name === undefined) _name = "Namenlos";
-        if (_preis === undefined) _preis = 0;
-        if (_stil === undefined) _stil = "Holder";
-        if (_path === undefined) _path = "../Abgabe2/Media/default.png";
-        this.name = _name;
-        this.preis = _preis;
-        this.stil = _stil;
-        this.path = _path;
-
-
-    }
-    public flexCreate(): void {
-        let newElemnt: HTMLDivElement = document.createElement("div");
-        let divHolder: HTMLElement = document.getElementById("divHolder");
-        divHolder.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedHolder");
-        newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveHolder[counth] = this;
-        counth++;
-
-    }
-
-}
 
 //Parsing and Creation of Elements/Selection
 async function parsingJson(): Promise<void> {
-    if (siteHandle() != "index") { loadDisplay("fortschritt"); }
+    if (curSite != "index") { loadDisplay("fortschritt"); }
 
     let pjson: Parsing[] = JSON.parse(await jayson());
     let i: number = 0;
@@ -167,26 +71,26 @@ async function parsingJson(): Promise<void> {
     let l: number = 0;
     for (let key in pjson) {
 
-        if (pjson[key].stil == "Waffel" && (siteHandle() == "Waffel")) {
-            let obj: Waffel = new Waffel(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Waffel" && (curSite == "Waffel")) {
+            let obj: EisBase = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveWaffel[i] = obj;
             i++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Topping" && (siteHandle() == "Belag")) {
-            let obj: Topping = new Topping(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Topping" && (curSite == "Belag")) {
+            let obj: EisBase = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveTopping[j] = obj;
             j++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Ice" && (siteHandle() == "Eis")) {
-            let obj: Ice = new Ice(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Ice" && (curSite == "Eis")) {
+            let obj: EisBase = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveIce[k] = obj;
             k++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Holder" && (siteHandle() == "Halter")) {
-            let obj: Holder = new Holder(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Holder" && (curSite == "Halter")) {
+            let obj: EisBase = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveHolder[l] = obj;
             l++;
             obj.flexCreate();
@@ -195,81 +99,35 @@ async function parsingJson(): Promise<void> {
 }
 
 //#region Creation the Selection flexbox
-function defaultDivCreation(): void {
-    if (siteHandle() == "Waffel") {
-        divCreate("Waffel");
-    }
-    if (siteHandle() == "Belag") {
-        divCreate("Topping");
-    }
-    if (siteHandle() == "Eis") {
-        divCreate("Ice");
-    }
-    if (siteHandle() == "Halter") {
-        divCreate("Holder");
-    }
-}
 
-function divCreate(_type: string): void {
+function divCreate(): void {
     let partsDiv: HTMLElement = document.getElementById("PartsDiv");
     let newDiv: HTMLDivElement = document.createElement("div");
     partsDiv.appendChild(newDiv);
-    newDiv.setAttribute("id", "div" + _type);
+    newDiv.setAttribute("id", "divGen");
 }
 //#endregion
 
 //#region selection handeling
 
-//alles mit id=generated, sodass mann nur einmal laden muss (kürzen)
 function listenToSelection(): void {
-    let arrHolder: HTMLCollectionOf<Element> = document.getElementsByClassName("generatedHolder");
-    let arrIce: HTMLCollectionOf<Element> = document.getElementsByClassName("generatedIce");
-    let arrTopping: HTMLCollectionOf<Element> = document.getElementsByClassName("generatedTopping");
-    let arrWaffel: HTMLCollectionOf<Element> = document.getElementsByClassName("generatedWaffel");
-
-    for (let i: number = 0; i < arrHolder.length; i++) {
-        arrHolder[i].addEventListener("click", function (): void { selectHolder(i, arrHolder); });
-    }
-    for (let i: number = 0; i < arrIce.length; i++) {
-        arrIce[i].addEventListener("click", function (): void { selectIce(i, arrIce); });
-    }
-    for (let i: number = 0; i < arrTopping.length; i++) {
-        arrTopping[i].addEventListener("click", function (): void { selectTopping(i, arrTopping); });
-    }
-    for (let i: number = 0; i < arrWaffel.length; i++) {
-        arrWaffel[i].addEventListener("click", function (): void { selectWaffel(i, arrWaffel); });
+    let arrGenerated: HTMLCollectionOf<Element> = document.getElementsByClassName("generated");
+    for (let i: number = 0; i < arrGenerated.length; i++) {
+        arrGenerated[i].addEventListener("click", function (): void { selectedObj(i, arrGenerated); });
     }
 }
 
 
-function selectHolder(k: number, arr: HTMLCollectionOf<Element>): void {
+
+
+function selectedObj(k: number, arr: HTMLCollectionOf<Element>): void {
     for (let i: number = 0; i < arr.length; i++) {
         arr[i].setAttribute("id", "");
     }
     arr[k].setAttribute("id", "selectedHolder");
-    selectedParts[0] = k;
-}
-function selectIce(k: number, arr: HTMLCollectionOf<Element>): void {
-    for (let i: number = 0; i < arr.length; i++) {
-        arr[i].setAttribute("id", "");
-    }
-    arr[k].setAttribute("id", "selectedIce");
-    selectedParts[1] = k;
-}
-function selectTopping(k: number, arr: HTMLCollectionOf<Element>): void {
-    for (let i: number = 0; i < arr.length; i++) {
-        arr[i].setAttribute("id", "");
-    }
-    arr[k].setAttribute("id", "selectedTopping");
-    selectedParts[2] = k;
-}
-function selectWaffel(k: number, arr: HTMLCollectionOf<Element>): void {
-    for (let i: number = 0; i < arr.length; i++) {
-        arr[i].setAttribute("id", "");
-    }
-    arr[k].setAttribute("id", "selectedWaffle");
-    selectedParts[3] = k;
 
+
+    selectedParts[curSiteNumber] = k;
 }
 
 //#endregion
@@ -284,40 +142,33 @@ interface Parsing {
     path: string;
 }
 
+//
+//
+// UNTERFKT Kürzen !!!
+//
+//
 
 function loadDisplay(_ausw: string): void {
-    let pWaf: Parsing = JSON.parse(localStorage.getItem("Waffel"));
-    let pTop: Parsing = JSON.parse(localStorage.getItem("Belag"));
-    let pIce: Parsing = JSON.parse(localStorage.getItem("Eis"));
-    let pHol: Parsing = JSON.parse(localStorage.getItem("Halter"));
-    let myWaffel: Waffel;
-    let myTopping: Topping;
-    let myIce: Ice;
-    let myHolder: Holder;
-    if (pWaf != null) {
-        myWaffel = new Waffel(pWaf.name, pWaf.preis, pWaf.stil, pWaf.path);
-    }
-    if (pTop != null) {
-        myTopping = new Topping(pTop.name, pTop.preis, pTop.stil, pTop.path);
-    }
-    if (pIce != null) {
-        myIce = new Ice(pIce.name, pIce.preis, pIce.stil, pIce.path);
-    }
-    if (pHol != null) {
-        myHolder = new Holder(pHol.name, pHol.preis, pHol.stil, pHol.path);
-    }
-    displayRes(myWaffel, myTopping, myIce, myHolder, _ausw);
+    let saveEis: EisBase[] = [];
 
-    if (siteHandle() == "index") {
-        sendServer = new ServerPaket(myWaffel, myTopping, myIce, myHolder);
+    for (let i: number = 0; i < 4; i++) {
+        let arrEis: Parsing = JSON.parse(localStorage.getItem(partsString[i]));
+        saveEis[i] = new EisBase(arrEis.name, arrEis.preis, arrEis.stil, arrEis.path);
+    }
+
+    displayRes(saveEis[0], saveEis[1], saveEis[2], saveEis[3], _ausw);
+
+    if (curSite == "index") {
+        sendServer = new ServerPaket(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
         let sentJson: string = JSON.stringify(sendServer);
         localStorage.setItem("Configuration", sentJson);
-        displayProduct(myWaffel, myTopping, myIce, myHolder);
+        displayProduct(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
     }
+
 }
 
 let needUpdate: number[] = [];
-function displayRes(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder, _ausw: string): void {
+function displayRes(_waf: EisBase, _top: EisBase, _ice: EisBase, _hol: EisBase, _ausw: string): void {
     let ausWaffel: HTMLDivElement = document.createElement("div");
     let ausTopping: HTMLDivElement = document.createElement("div");
     let ausIce: HTMLDivElement = document.createElement("div");
@@ -357,19 +208,19 @@ function displayRes(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder, _ausw:
     } else {
         if (_waf != undefined) {
             ausWaffel.innerHTML = "<img src = " + _waf.path + "></img>";
-            if (siteHandle() != "index") { ausWaffel.style.marginTop = "-300px"; }
+            if (curSite != "index") { ausWaffel.style.marginTop = "-300px"; }
         }
         if (_top != undefined) {
             ausTopping.innerHTML = "<img src = " + _top.path + "></img>";
-            if (siteHandle() != "index") { ausTopping.style.marginTop = "-300px"; }
+            if (curSite != "index") { ausTopping.style.marginTop = "-300px"; }
         }
         if (_ice != undefined) {
             ausIce.innerHTML = "<img src = " + _ice.path + "></img>";
-            if (siteHandle() != "index") { ausIce.style.marginTop = "-300px"; }
+            if (curSite != "index") { ausIce.style.marginTop = "-300px"; }
         }
         if (_hol != undefined) {
             ausHolder.innerHTML = "<img src = " + _hol.path + "></img>";
-            if (siteHandle() != "index") { ausHolder.style.marginTop = "-300px"; }
+            if (curSite != "index") { ausHolder.style.marginTop = "-300px"; }
         }
     }
 
@@ -377,7 +228,7 @@ function displayRes(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder, _ausw:
 
 }
 
-function displayProduct(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder): void {
+function displayProduct(_waf: EisBase, _top: EisBase, _ice: EisBase, _hol: EisBase): void {
     let produktDiv: HTMLElement = document.getElementById("Produkt");
     produktDiv.innerHTML = "<b><u>Ihr Eis: </u></b><br>";
     if (_ice == undefined && _hol == undefined && _waf == undefined && _top == undefined) {
@@ -385,7 +236,7 @@ function displayProduct(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder): v
     } else {
         let price: number = 0;
         if (_ice != undefined) {
-            produktDiv.innerHTML += _ice.name + "-Eis";
+            produktDiv.innerHTML += _ice.name + "-Eis ";
             price += _ice.preis;
         } else {
             produktDiv.innerHTML += "Eisloses Eis ";
@@ -415,26 +266,26 @@ function displayProduct(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder): v
 //#region Buttonlogic und Display
 
 function saveButton(): void {
-    if ((siteHandle() == "Waffel") && selectedParts[3] != -1) {
-        let obj: Waffel = saveWaffel[selectedParts[3]];
+    if ((curSite == "Waffel") && selectedParts[3] != -1) {
+        let obj: EisBase = saveWaffel[selectedParts[3]];
         let myJSON: string = JSON.stringify(obj);
         localStorage.setItem("Waffel", myJSON);
         window.open("index.html", "_self");
     }
-    if ((siteHandle() == "Belag") && selectedParts[2] != -1) {
-        let obj2: Topping = saveTopping[selectedParts[2]];
+    if ((curSite == "Belag") && selectedParts[2] != -1) {
+        let obj2: EisBase = saveTopping[selectedParts[2]];
         let myJSON2: string = JSON.stringify(obj2);
         localStorage.setItem("Belag", myJSON2);
         window.open("iwaffel.html", "_self");
     }
-    if ((siteHandle() == "Eis") && selectedParts[1] != -1) {
-        let obj3: Ice = saveIce[selectedParts[1]];
+    if ((curSite == "Eis") && selectedParts[1] != -1) {
+        let obj3: EisBase = saveIce[selectedParts[1]];
         let myJSON3: string = JSON.stringify(obj3);
         localStorage.setItem("Eis", myJSON3);
         window.open("ibelag.html", "_self");
     }
-    if ((siteHandle() == "Halter") && selectedParts[0] != -1) {
-        let obj4: Holder = saveHolder[selectedParts[0]];
+    if ((curSite == "Halter") && selectedParts[0] != -1) {
+        let obj4: EisBase = saveHolder[selectedParts[0]];
         let myJSON4: string = JSON.stringify(obj4);
         localStorage.setItem("Halter", myJSON4);
         window.open("ieis.html", "_self");
@@ -448,33 +299,36 @@ function startButton(): void {
 }
 
 function backButton(): void {
-    if (siteHandle() == "Waffel") {
+    if (curSite == "Waffel") {
         window.open("ibelag.html", "_self");
     }
-    if (siteHandle() == "Belag") {
+    if (curSite == "Belag") {
         window.open("ieis.html", "_self");
     }
-    if (siteHandle() == "Eis") {
+    if (curSite == "Eis") {
         console.log("back");
         window.open("ihalter.html", "_self");
     }
-    if (siteHandle() == "Halter") {
+    if (curSite == "Halter") {
         window.open("index.html", "_self");
     }
 }
 //#endregion
 
 //#region Multi-Eventhandler
-if (siteHandle() == "index") {
-    document.getElementById("startButton").addEventListener("click", startButton);
+function eventHandler(): void {
+    if (curSite == "index") {
+        document.getElementById("startButton").addEventListener("click", startButton);
 
+    }
+
+    if (curSite != "index") {
+        document.addEventListener("load", function (): void { loadDisplay("fortschritt"); });
+        document.getElementById("saveButton").addEventListener("click", saveButton);
+        document.getElementById("backButton").addEventListener("click", backButton);
+    }
 }
 
-if (siteHandle() != "index") {
-    document.addEventListener("load", function (): void { loadDisplay("fortschritt"); });
-    document.getElementById("saveButton").addEventListener("click", saveButton);
-    document.getElementById("backButton").addEventListener("click", backButton);
-}
 //#endregion
 
 //Reloads the Site to ensure generated emlemnt are loaded
@@ -494,13 +348,13 @@ async function jayson(): Promise<string> {
     return jsonString;
 }
 
-function siteHandle(): string {
+function siteHandle(): void {
     let currentSite: HTMLElement = document.getElementById("Headline");
-    if (currentSite.innerHTML == "Your Icecream Generator: Start/End") { return "index"; }
-    if (currentSite.innerHTML == "Your Icecream Generator: Halter") { return "Halter"; }
-    if (currentSite.innerHTML == "Your Icecream Generator: Eis") { return "Eis"; }
-    if (currentSite.innerHTML == "Your Icecream Generator: Belag") { return "Belag"; }
-    if (currentSite.innerHTML == "Your Icecream Generator: Extra") { return "Waffel"; }
+    if (currentSite.innerHTML == "Your Icecream Generator: Start/End") { curSiteNumber = 4; curSite = "index"; }
+    if (currentSite.innerHTML == "Your Icecream Generator: Halter") { curSiteNumber = 0; curSite = "Halter"; }
+    if (currentSite.innerHTML == "Your Icecream Generator: Eis") { curSiteNumber = 1; curSite = "Eis"; }
+    if (currentSite.innerHTML == "Your Icecream Generator: Belag") { curSiteNumber = 2; curSite = "Belag"; }
+    if (currentSite.innerHTML == "Your Icecream Generator: Extra") { curSiteNumber = 3; curSite = "Waffel"; }
     return null;
 }
 
@@ -575,17 +429,20 @@ function showServerMessage(_message: ServerMessage): void {
 
 init();
 function init(): void {
-    defaultDivCreation();
+    siteHandle();
+    eventHandler();
+    console.log(curSite);
+    divCreate();
     parsingJson();
     setTimeout(listenToSelection, 100);
     listenToSelection();
 
-    if (siteHandle() == "index" && siteVisited() == true) {
+    if (curSite == "index" && siteVisited() == true) {
         visitingIndex();
         loadDisplay("fortschritt");
         setTimeout(function (): void { loadDisplay("ausgewahlt"); }, 100);
         getServerMessage("https://gis-communication.herokuapp.com/");
-    } else if (siteHandle() == "index" && siteVisited() == false) {
+    } else if (curSite == "index" && siteVisited() == false) {
         startSite();
     }
 

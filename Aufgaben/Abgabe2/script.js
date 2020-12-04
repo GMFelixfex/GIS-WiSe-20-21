@@ -5,8 +5,10 @@ let saveWaffel = [];
 let saveTopping = [];
 let saveIce = [];
 let saveHolder = [];
+let partsString = ["Waffel", "Belag", "Eis", "Halter"];
 let selectedParts = [-1, -1, -1, -1];
 let curSite = "";
+let curSiteNumber = -1;
 let sendServer;
 class ServerPaket {
     constructor(_waffel, _belag, _eis, _halter) {
@@ -17,7 +19,7 @@ class ServerPaket {
     }
 }
 let countw = 0;
-class Waffel {
+class EisBase {
     constructor(_name, _preis, _stil, _path) {
         if (_name === undefined)
             _name = "Namenlos";
@@ -34,95 +36,17 @@ class Waffel {
     }
     flexCreate() {
         let newElemnt = document.createElement("div");
-        let divWaffel = document.getElementById("divWaffel");
+        let divWaffel = document.getElementById("divGen");
         divWaffel.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedWaffel");
+        newElemnt.setAttribute("class", "generated");
         newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
         saveWaffel[countw] = this;
         countw++;
     }
 }
-let countt = 0;
-class Topping {
-    constructor(_name, _preis, _stil, _path) {
-        if (_name === undefined)
-            _name = "Namenlos";
-        if (_preis === undefined)
-            _preis = 0;
-        if (_stil === undefined)
-            _stil = "Topping";
-        if (_path === undefined)
-            _path = "../Abgabe2/Media/default.png";
-        this.name = _name;
-        this.preis = _preis;
-        this.stil = _stil;
-        this.path = _path;
-    }
-    flexCreate() {
-        let newElemnt = document.createElement("div");
-        let divTopping = document.getElementById("divTopping");
-        divTopping.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedTopping");
-        newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveTopping[countt] = this;
-        countt++;
-    }
-}
-let counti = 0;
-class Ice {
-    constructor(_name, _preis, _stil, _path) {
-        if (_name === undefined)
-            _name = "Namenlos";
-        if (_preis === undefined)
-            _preis = 0;
-        if (_stil === undefined)
-            _stil = "Ice";
-        if (_path === undefined)
-            _path = "../Abgabe2/Media/default.png";
-        this.name = _name;
-        this.preis = _preis;
-        this.stil = _stil;
-        this.path = _path;
-    }
-    flexCreate() {
-        let newElemnt = document.createElement("div");
-        let divIce = document.getElementById("divIce");
-        divIce.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedIce");
-        newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveIce[counti] = this;
-        counti++;
-    }
-}
-let counth = 0;
-class Holder {
-    constructor(_name, _preis, _stil, _path) {
-        if (_name === undefined)
-            _name = "Namenlos";
-        if (_preis === undefined)
-            _preis = 0;
-        if (_stil === undefined)
-            _stil = "Holder";
-        if (_path === undefined)
-            _path = "../Abgabe2/Media/default.png";
-        this.name = _name;
-        this.preis = _preis;
-        this.stil = _stil;
-        this.path = _path;
-    }
-    flexCreate() {
-        let newElemnt = document.createElement("div");
-        let divHolder = document.getElementById("divHolder");
-        divHolder.appendChild(newElemnt);
-        newElemnt.setAttribute("class", "generatedHolder");
-        newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveHolder[counth] = this;
-        counth++;
-    }
-}
 //Parsing and Creation of Elements/Selection
 async function parsingJson() {
-    if (siteHandle() != "index") {
+    if (curSite != "index") {
         loadDisplay("fortschritt");
     }
     let pjson = JSON.parse(await jayson());
@@ -131,26 +55,26 @@ async function parsingJson() {
     let k = 0;
     let l = 0;
     for (let key in pjson) {
-        if (pjson[key].stil == "Waffel" && (siteHandle() == "Waffel")) {
-            let obj = new Waffel(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Waffel" && (curSite == "Waffel")) {
+            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveWaffel[i] = obj;
             i++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Topping" && (siteHandle() == "Belag")) {
-            let obj = new Topping(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Topping" && (curSite == "Belag")) {
+            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveTopping[j] = obj;
             j++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Ice" && (siteHandle() == "Eis")) {
-            let obj = new Ice(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Ice" && (curSite == "Eis")) {
+            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveIce[k] = obj;
             k++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Holder" && (siteHandle() == "Halter")) {
-            let obj = new Holder(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
+        if (pjson[key].stil == "Holder" && (curSite == "Halter")) {
+            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveHolder[l] = obj;
             l++;
             obj.flexCreate();
@@ -158,102 +82,44 @@ async function parsingJson() {
     }
 }
 //#region Creation the Selection flexbox
-function defaultDivCreation() {
-    if (siteHandle() == "Waffel") {
-        divCreate("Waffel");
-    }
-    if (siteHandle() == "Belag") {
-        divCreate("Topping");
-    }
-    if (siteHandle() == "Eis") {
-        divCreate("Ice");
-    }
-    if (siteHandle() == "Halter") {
-        divCreate("Holder");
-    }
-}
-function divCreate(_type) {
+function divCreate() {
     let partsDiv = document.getElementById("PartsDiv");
     let newDiv = document.createElement("div");
     partsDiv.appendChild(newDiv);
-    newDiv.setAttribute("id", "div" + _type);
+    newDiv.setAttribute("id", "divGen");
 }
 //#endregion
 //#region selection handeling
-//alles mit id=generated, sodass mann nur einmal laden muss (kürzen)
 function listenToSelection() {
-    let arrHolder = document.getElementsByClassName("generatedHolder");
-    let arrIce = document.getElementsByClassName("generatedIce");
-    let arrTopping = document.getElementsByClassName("generatedTopping");
-    let arrWaffel = document.getElementsByClassName("generatedWaffel");
-    for (let i = 0; i < arrHolder.length; i++) {
-        arrHolder[i].addEventListener("click", function () { selectHolder(i, arrHolder); });
-    }
-    for (let i = 0; i < arrIce.length; i++) {
-        arrIce[i].addEventListener("click", function () { selectIce(i, arrIce); });
-    }
-    for (let i = 0; i < arrTopping.length; i++) {
-        arrTopping[i].addEventListener("click", function () { selectTopping(i, arrTopping); });
-    }
-    for (let i = 0; i < arrWaffel.length; i++) {
-        arrWaffel[i].addEventListener("click", function () { selectWaffel(i, arrWaffel); });
+    let arrGenerated = document.getElementsByClassName("generated");
+    for (let i = 0; i < arrGenerated.length; i++) {
+        arrGenerated[i].addEventListener("click", function () { selectedObj(i, arrGenerated); });
     }
 }
-function selectHolder(k, arr) {
+function selectedObj(k, arr) {
     for (let i = 0; i < arr.length; i++) {
         arr[i].setAttribute("id", "");
     }
     arr[k].setAttribute("id", "selectedHolder");
-    selectedParts[0] = k;
+    selectedParts[curSiteNumber] = k;
 }
-function selectIce(k, arr) {
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].setAttribute("id", "");
-    }
-    arr[k].setAttribute("id", "selectedIce");
-    selectedParts[1] = k;
-}
-function selectTopping(k, arr) {
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].setAttribute("id", "");
-    }
-    arr[k].setAttribute("id", "selectedTopping");
-    selectedParts[2] = k;
-}
-function selectWaffel(k, arr) {
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].setAttribute("id", "");
-    }
-    arr[k].setAttribute("id", "selectedWaffle");
-    selectedParts[3] = k;
-}
+//
+//
+// UNTERFKT Kürzen !!!
+//
+//
 function loadDisplay(_ausw) {
-    let pWaf = JSON.parse(localStorage.getItem("Waffel"));
-    let pTop = JSON.parse(localStorage.getItem("Belag"));
-    let pIce = JSON.parse(localStorage.getItem("Eis"));
-    let pHol = JSON.parse(localStorage.getItem("Halter"));
-    let myWaffel;
-    let myTopping;
-    let myIce;
-    let myHolder;
-    if (pWaf != null) {
-        myWaffel = new Waffel(pWaf.name, pWaf.preis, pWaf.stil, pWaf.path);
+    let saveEis = [];
+    for (let i = 0; i < 4; i++) {
+        let arrEis = JSON.parse(localStorage.getItem(partsString[i]));
+        saveEis[i] = new EisBase(arrEis.name, arrEis.preis, arrEis.stil, arrEis.path);
     }
-    if (pTop != null) {
-        myTopping = new Topping(pTop.name, pTop.preis, pTop.stil, pTop.path);
-    }
-    if (pIce != null) {
-        myIce = new Ice(pIce.name, pIce.preis, pIce.stil, pIce.path);
-    }
-    if (pHol != null) {
-        myHolder = new Holder(pHol.name, pHol.preis, pHol.stil, pHol.path);
-    }
-    displayRes(myWaffel, myTopping, myIce, myHolder, _ausw);
-    if (siteHandle() == "index") {
-        sendServer = new ServerPaket(myWaffel, myTopping, myIce, myHolder);
+    displayRes(saveEis[0], saveEis[1], saveEis[2], saveEis[3], _ausw);
+    if (curSite == "index") {
+        sendServer = new ServerPaket(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
         let sentJson = JSON.stringify(sendServer);
         localStorage.setItem("Configuration", sentJson);
-        displayProduct(myWaffel, myTopping, myIce, myHolder);
+        displayProduct(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
     }
 }
 let needUpdate = [];
@@ -296,25 +162,25 @@ function displayRes(_waf, _top, _ice, _hol, _ausw) {
     else {
         if (_waf != undefined) {
             ausWaffel.innerHTML = "<img src = " + _waf.path + "></img>";
-            if (siteHandle() != "index") {
+            if (curSite != "index") {
                 ausWaffel.style.marginTop = "-300px";
             }
         }
         if (_top != undefined) {
             ausTopping.innerHTML = "<img src = " + _top.path + "></img>";
-            if (siteHandle() != "index") {
+            if (curSite != "index") {
                 ausTopping.style.marginTop = "-300px";
             }
         }
         if (_ice != undefined) {
             ausIce.innerHTML = "<img src = " + _ice.path + "></img>";
-            if (siteHandle() != "index") {
+            if (curSite != "index") {
                 ausIce.style.marginTop = "-300px";
             }
         }
         if (_hol != undefined) {
             ausHolder.innerHTML = "<img src = " + _hol.path + "></img>";
-            if (siteHandle() != "index") {
+            if (curSite != "index") {
                 ausHolder.style.marginTop = "-300px";
             }
         }
@@ -356,25 +222,25 @@ function displayProduct(_waf, _top, _ice, _hol) {
 //#endregion
 //#region Buttonlogic und Display
 function saveButton() {
-    if ((siteHandle() == "Waffel") && selectedParts[3] != -1) {
+    if ((curSite == "Waffel") && selectedParts[3] != -1) {
         let obj = saveWaffel[selectedParts[3]];
         let myJSON = JSON.stringify(obj);
         localStorage.setItem("Waffel", myJSON);
         window.open("index.html", "_self");
     }
-    if ((siteHandle() == "Belag") && selectedParts[2] != -1) {
+    if ((curSite == "Belag") && selectedParts[2] != -1) {
         let obj2 = saveTopping[selectedParts[2]];
         let myJSON2 = JSON.stringify(obj2);
         localStorage.setItem("Belag", myJSON2);
         window.open("iwaffel.html", "_self");
     }
-    if ((siteHandle() == "Eis") && selectedParts[1] != -1) {
+    if ((curSite == "Eis") && selectedParts[1] != -1) {
         let obj3 = saveIce[selectedParts[1]];
         let myJSON3 = JSON.stringify(obj3);
         localStorage.setItem("Eis", myJSON3);
         window.open("ibelag.html", "_self");
     }
-    if ((siteHandle() == "Halter") && selectedParts[0] != -1) {
+    if ((curSite == "Halter") && selectedParts[0] != -1) {
         let obj4 = saveHolder[selectedParts[0]];
         let myJSON4 = JSON.stringify(obj4);
         localStorage.setItem("Halter", myJSON4);
@@ -386,29 +252,31 @@ function startButton() {
     window.open("ihalter.html", "_self");
 }
 function backButton() {
-    if (siteHandle() == "Waffel") {
+    if (curSite == "Waffel") {
         window.open("ibelag.html", "_self");
     }
-    if (siteHandle() == "Belag") {
+    if (curSite == "Belag") {
         window.open("ieis.html", "_self");
     }
-    if (siteHandle() == "Eis") {
+    if (curSite == "Eis") {
         console.log("back");
         window.open("ihalter.html", "_self");
     }
-    if (siteHandle() == "Halter") {
+    if (curSite == "Halter") {
         window.open("index.html", "_self");
     }
 }
 //#endregion
 //#region Multi-Eventhandler
-if (siteHandle() == "index") {
-    document.getElementById("startButton").addEventListener("click", startButton);
-}
-if (siteHandle() != "index") {
-    document.addEventListener("load", function () { loadDisplay("fortschritt"); });
-    document.getElementById("saveButton").addEventListener("click", saveButton);
-    document.getElementById("backButton").addEventListener("click", backButton);
+function eventHandler() {
+    if (curSite == "index") {
+        document.getElementById("startButton").addEventListener("click", startButton);
+    }
+    if (curSite != "index") {
+        document.addEventListener("load", function () { loadDisplay("fortschritt"); });
+        document.getElementById("saveButton").addEventListener("click", saveButton);
+        document.getElementById("backButton").addEventListener("click", backButton);
+    }
 }
 //#endregion
 //Reloads the Site to ensure generated emlemnt are loaded
@@ -429,19 +297,24 @@ async function jayson() {
 function siteHandle() {
     let currentSite = document.getElementById("Headline");
     if (currentSite.innerHTML == "Your Icecream Generator: Start/End") {
-        return "index";
+        curSiteNumber = 4;
+        curSite = "index";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Halter") {
-        return "Halter";
+        curSiteNumber = 0;
+        curSite = "Halter";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Eis") {
-        return "Eis";
+        curSiteNumber = 1;
+        curSite = "Eis";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Belag") {
-        return "Belag";
+        curSiteNumber = 2;
+        curSite = "Belag";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Extra") {
-        return "Waffel";
+        curSiteNumber = 3;
+        curSite = "Waffel";
     }
     return null;
 }
@@ -503,17 +376,20 @@ function showServerMessage(_message) {
 }
 init();
 function init() {
-    defaultDivCreation();
+    siteHandle();
+    eventHandler();
+    console.log(curSite);
+    divCreate();
     parsingJson();
     setTimeout(listenToSelection, 100);
     listenToSelection();
-    if (siteHandle() == "index" && siteVisited() == true) {
+    if (curSite == "index" && siteVisited() == true) {
         visitingIndex();
         loadDisplay("fortschritt");
         setTimeout(function () { loadDisplay("ausgewahlt"); }, 100);
         getServerMessage("https://gis-communication.herokuapp.com/");
     }
-    else if (siteHandle() == "index" && siteVisited() == false) {
+    else if (curSite == "index" && siteVisited() == false) {
         startSite();
     }
 }
