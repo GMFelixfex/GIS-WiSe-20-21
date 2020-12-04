@@ -1,15 +1,18 @@
 "use strict";
 let hHead = document.head;
 let hBody = document.body;
-let saveWaffel = [];
-let saveTopping = [];
-let saveIce = [];
-let saveHolder = [];
+//Arrays/Variablen für die verwendung im Script
+let saveObject = [];
 let partsString = ["Waffel", "Belag", "Eis", "Halter"];
 let selectedParts = [-1, -1, -1, -1];
 let curSite = "";
+let innerSite = "";
 let curSiteNumber = -1;
+let pages = ["ndex", "Halter", "Eis", "Belag", "Waffel", "ndex"];
+let stilEng = ["Holder", "Ice", "Topping", "Waffel"];
 let sendServer;
+let countw = 0;
+//Klasse für ds versendete serverpaket
 class ServerPaket {
     constructor(_waffel, _belag, _eis, _halter) {
         this.waffel = _waffel;
@@ -18,7 +21,7 @@ class ServerPaket {
         this.halter = _halter;
     }
 }
-let countw = 0;
+// Klasse für die verschiedenen objekte
 class EisBase {
     constructor(_name, _preis, _stil, _path) {
         if (_name === undefined)
@@ -40,56 +43,41 @@ class EisBase {
         divWaffel.appendChild(newElemnt);
         newElemnt.setAttribute("class", "generated");
         newElemnt.innerHTML = "<img src = " + this.path + "></img>" + this.name + "<br>" + " Preis: " + this.preis + "€";
-        saveWaffel[countw] = this;
         countw++;
     }
 }
-//Parsing and Creation of Elements/Selection
+//#region Element Erstellung
+//Parsing and Creation of Elements/Selection (läd aus der data.json alle  elemnte in das saveObject array)
+async function jayson() {
+    let response = await fetch("data.json");
+    let json = await response.json();
+    let jsonString = JSON.stringify(json);
+    return jsonString;
+}
 async function parsingJson() {
     if (curSite != "index") {
         loadDisplay("fortschritt");
     }
     let pjson = JSON.parse(await jayson());
     let i = 0;
-    let j = 0;
-    let k = 0;
-    let l = 0;
     for (let key in pjson) {
-        if (pjson[key].stil == "Waffel" && (curSite == "Waffel")) {
+        if (pjson[key].stil == innerSite) {
             let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
-            saveWaffel[i] = obj;
+            saveObject[i] = obj;
             i++;
-            obj.flexCreate();
-        }
-        if (pjson[key].stil == "Topping" && (curSite == "Belag")) {
-            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
-            saveTopping[j] = obj;
-            j++;
-            obj.flexCreate();
-        }
-        if (pjson[key].stil == "Ice" && (curSite == "Eis")) {
-            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
-            saveIce[k] = obj;
-            k++;
-            obj.flexCreate();
-        }
-        if (pjson[key].stil == "Holder" && (curSite == "Halter")) {
-            let obj = new EisBase(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
-            saveHolder[l] = obj;
-            l++;
             obj.flexCreate();
         }
     }
 }
-//#region Creation the Selection flexbox
+//#endregion
+//Erstellt eine Flexbox für  die verschiedenen auswahlmöglichkeiten
 function divCreate() {
     let partsDiv = document.getElementById("PartsDiv");
     let newDiv = document.createElement("div");
     partsDiv.appendChild(newDiv);
     newDiv.setAttribute("id", "divGen");
 }
-//#endregion
-//#region selection handeling
+//#region selection handeling (Schaut ob einer der Außwahlmöglichkeiten ausgewählt ist)
 function listenToSelection() {
     let arrGenerated = document.getElementsByClassName("generated");
     for (let i = 0; i < arrGenerated.length; i++) {
@@ -100,21 +88,19 @@ function selectedObj(k, arr) {
     for (let i = 0; i < arr.length; i++) {
         arr[i].setAttribute("id", "");
     }
-    arr[k].setAttribute("id", "selectedHolder");
+    arr[k].setAttribute("id", "selectedObj");
     selectedParts[curSiteNumber] = k;
 }
-//
-//
-// UNTERFKT Kürzen !!!
-//
-//
+//Läd aus dem Lokal storage die Displayitems und zeiigt sie abhängig von de seite an 
 function loadDisplay(_ausw) {
     let saveEis = [];
     for (let i = 0; i < 4; i++) {
         let arrEis = JSON.parse(localStorage.getItem(partsString[i]));
-        saveEis[i] = new EisBase(arrEis.name, arrEis.preis, arrEis.stil, arrEis.path);
+        if (arrEis != null) {
+            saveEis[i] = new EisBase(arrEis.name, arrEis.preis, arrEis.stil, arrEis.path);
+        }
     }
-    displayRes(saveEis[0], saveEis[1], saveEis[2], saveEis[3], _ausw);
+    displayRes(saveEis, _ausw);
     if (curSite == "index") {
         sendServer = new ServerPaket(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
         let sentJson = JSON.stringify(sendServer);
@@ -122,70 +108,31 @@ function loadDisplay(_ausw) {
         displayProduct(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
     }
 }
-let needUpdate = [];
-function displayRes(_waf, _top, _ice, _hol, _ausw) {
-    let ausWaffel = document.createElement("div");
-    let ausTopping = document.createElement("div");
-    let ausIce = document.createElement("div");
-    let ausHolder = document.createElement("div");
+//displayed den Fortschritt an der linken seite der Website
+function displayRes(_arrEisBase, _ausw) {
     let divAus = document.getElementById(_ausw);
-    if (_waf != undefined) {
-        divAus.replaceChild(ausWaffel, document.getElementById(_ausw + "Waffel"));
-        ausWaffel.setAttribute("id", _ausw + _waf.stil);
-    }
-    if (_top != undefined) {
-        divAus.replaceChild(ausTopping, document.getElementById(_ausw + "Topping"));
-        ausTopping.setAttribute("id", _ausw + _top.stil);
-    }
-    if (_ice != undefined) {
-        divAus.replaceChild(ausIce, document.getElementById(_ausw + "Ice"));
-        ausIce.setAttribute("id", _ausw + _ice.stil);
-    }
-    if (_hol != undefined) {
-        divAus.replaceChild(ausHolder, document.getElementById(_ausw + "Holder"));
-        ausHolder.setAttribute("id", _ausw + _hol.stil);
-    }
-    if (_ausw == "ausgewahlt") {
-        if (_waf != undefined) {
-            ausWaffel.innerHTML = "<img src = " + _waf.path + "></img>" + "<h2>Extra: " + _waf.name + "</h2><h2>Preis: " + _waf.preis + "€ </h2>";
+    for (let i = 0; i < 4; i++) {
+        let ausWahl = document.createElement("div");
+        if (_arrEisBase[i] != undefined) {
+            divAus.replaceChild(ausWahl, document.getElementById(_ausw + _arrEisBase[i].stil));
+            ausWahl.setAttribute("id", _ausw + _arrEisBase[i].stil);
         }
-        if (_top != undefined) {
-            ausTopping.innerHTML = "<img src = " + _top.path + "></img>" + "<h2>Belag: " + _top.name + "</h2><h2>Preis: " + _top.preis + "€ </h2>";
-        }
-        if (_ice != undefined) {
-            ausIce.innerHTML = "<img src = " + _ice.path + "></img>" + "<h2>Eis: " + _ice.name + "</h2><h2>Preis: " + _ice.preis + "€ </h2>";
-        }
-        if (_hol != undefined) {
-            ausHolder.innerHTML = "<img src = " + _hol.path + "></img>" + "<h2>Halter: " + _hol.name + "</h2><h2>Preis: " + _hol.preis + "€ </h2>";
-        }
-    }
-    else {
-        if (_waf != undefined) {
-            ausWaffel.innerHTML = "<img src = " + _waf.path + "></img>";
-            if (curSite != "index") {
-                ausWaffel.style.marginTop = "-300px";
+        if (_ausw == "ausgewahlt") {
+            if (_arrEisBase[i] != undefined) {
+                ausWahl.innerHTML = "<img src = " + _arrEisBase[i].path + "></img>" + "<h2>Extra: " + _arrEisBase[i].name + "</h2><h2>Preis: " + _arrEisBase[i].preis + "€ </h2>";
             }
         }
-        if (_top != undefined) {
-            ausTopping.innerHTML = "<img src = " + _top.path + "></img>";
-            if (curSite != "index") {
-                ausTopping.style.marginTop = "-300px";
-            }
-        }
-        if (_ice != undefined) {
-            ausIce.innerHTML = "<img src = " + _ice.path + "></img>";
-            if (curSite != "index") {
-                ausIce.style.marginTop = "-300px";
-            }
-        }
-        if (_hol != undefined) {
-            ausHolder.innerHTML = "<img src = " + _hol.path + "></img>";
-            if (curSite != "index") {
-                ausHolder.style.marginTop = "-300px";
+        else {
+            if (_arrEisBase[i] != undefined) {
+                ausWahl.innerHTML = "<img src = " + _arrEisBase[i].path + "></img>";
+                if (curSite != "index") {
+                    ausWahl.style.marginTop = "-300px";
+                }
             }
         }
     }
 }
+//Erstellt den text  mit dem preis an der Seite der Index(Start/End) Seite
 function displayProduct(_waf, _top, _ice, _hol) {
     let produktDiv = document.getElementById("Produkt");
     produktDiv.innerHTML = "<b><u>Ihr Eis: </u></b><br>";
@@ -195,7 +142,7 @@ function displayProduct(_waf, _top, _ice, _hol) {
     else {
         let price = 0;
         if (_ice != undefined) {
-            produktDiv.innerHTML += _ice.name + "-Eis";
+            produktDiv.innerHTML += _ice.name + "-Eis ";
             price += _ice.preis;
         }
         else {
@@ -220,31 +167,13 @@ function displayProduct(_waf, _top, _ice, _hol) {
     }
 }
 //#endregion
-//#region Buttonlogic und Display
+//#region Buttonlogic
 function saveButton() {
-    if ((curSite == "Waffel") && selectedParts[3] != -1) {
-        let obj = saveWaffel[selectedParts[3]];
+    if (selectedParts[curSiteNumber] != -1) {
+        let obj = saveObject[selectedParts[curSiteNumber]];
         let myJSON = JSON.stringify(obj);
-        localStorage.setItem("Waffel", myJSON);
-        window.open("index.html", "_self");
-    }
-    if ((curSite == "Belag") && selectedParts[2] != -1) {
-        let obj2 = saveTopping[selectedParts[2]];
-        let myJSON2 = JSON.stringify(obj2);
-        localStorage.setItem("Belag", myJSON2);
-        window.open("iwaffel.html", "_self");
-    }
-    if ((curSite == "Eis") && selectedParts[1] != -1) {
-        let obj3 = saveIce[selectedParts[1]];
-        let myJSON3 = JSON.stringify(obj3);
-        localStorage.setItem("Eis", myJSON3);
-        window.open("ibelag.html", "_self");
-    }
-    if ((curSite == "Halter") && selectedParts[0] != -1) {
-        let obj4 = saveHolder[selectedParts[0]];
-        let myJSON4 = JSON.stringify(obj4);
-        localStorage.setItem("Halter", myJSON4);
-        window.open("ieis.html", "_self");
+        localStorage.setItem(curSite, myJSON);
+        window.open("i" + pages[curSiteNumber + 2] + ".html", "_self");
     }
 }
 function startButton() {
@@ -252,22 +181,10 @@ function startButton() {
     window.open("ihalter.html", "_self");
 }
 function backButton() {
-    if (curSite == "Waffel") {
-        window.open("ibelag.html", "_self");
-    }
-    if (curSite == "Belag") {
-        window.open("ieis.html", "_self");
-    }
-    if (curSite == "Eis") {
-        console.log("back");
-        window.open("ihalter.html", "_self");
-    }
-    if (curSite == "Halter") {
-        window.open("index.html", "_self");
-    }
+    window.open("i" + pages[curSiteNumber] + ".html", "_self");
 }
 //#endregion
-//#region Multi-Eventhandler
+//#region Multi-Eventhandler  (Buttons und laden der Seite)
 function eventHandler() {
     if (curSite == "index") {
         document.getElementById("startButton").addEventListener("click", startButton);
@@ -288,36 +205,37 @@ function preloadElements(time) {
         setTimeout(preloadElements, time);
     }
 }
-async function jayson() {
-    let response = await fetch("data.json");
-    let json = await response.json();
-    let jsonString = JSON.stringify(json);
-    return jsonString;
-}
+//WICHTIG: Setzt die derzeitige Seite fest; wird sehr viel im verlauf des Codes gebraucht
 function siteHandle() {
     let currentSite = document.getElementById("Headline");
     if (currentSite.innerHTML == "Your Icecream Generator: Start/End") {
         curSiteNumber = 4;
         curSite = "index";
+        innerSite = "index";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Halter") {
         curSiteNumber = 0;
         curSite = "Halter";
+        innerSite = "Holder";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Eis") {
         curSiteNumber = 1;
         curSite = "Eis";
+        innerSite = "Ice";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Belag") {
         curSiteNumber = 2;
         curSite = "Belag";
+        innerSite = "Topping";
     }
     if (currentSite.innerHTML == "Your Icecream Generator: Extra") {
         curSiteNumber = 3;
         curSite = "Waffel";
+        innerSite = "Waffel";
     }
     return null;
 }
+//Checkt ob man schonmal auf der Index seite war (Nach dem start oder Reset), ist schöner den code so zu lassen als ihn zu kürzen!
 function siteVisited() {
     let pWaf = JSON.parse(localStorage.getItem("Waffel"));
     let pTop = JSON.parse(localStorage.getItem("Belag"));
@@ -330,23 +248,17 @@ function siteVisited() {
         return true;
     }
 }
-function visitingIndex() {
+function createAuswahltDiv() {
     let auswahl = document.createElement("div");
-    let aHol = document.createElement("div");
-    let aIce = document.createElement("div");
-    let aTop = document.createElement("div");
-    let aWaf = document.createElement("div");
     auswahl.setAttribute("id", "ausgewahlt");
-    aIce.setAttribute("id", "ausgewahltIce");
-    aHol.setAttribute("id", "ausgewahltHolder");
-    aTop.setAttribute("id", "ausgewahltTopping");
-    aWaf.setAttribute("id", "ausgewahltWaffel");
-    auswahl.appendChild(aHol);
-    auswahl.appendChild(aIce);
-    auswahl.appendChild(aTop);
-    auswahl.appendChild(aWaf);
     hBody.appendChild(auswahl);
+    for (let i = 0; i < 4; i++) {
+        let auswahlDiv = document.createElement("div");
+        auswahlDiv.setAttribute("id", "ausgewahlt" + stilEng[i]);
+        auswahl.appendChild(auswahlDiv);
+    }
 }
+//Verändert den Startbutton beim erstmaligem besuchen der index seite bzw. wenn der Cache gecleared wurde
 function startSite() {
     let startButton = document.getElementById("startButton");
     startButton.style.width = "600px";
@@ -374,17 +286,17 @@ function showServerMessage(_message) {
         messageDiv.style.color = "red";
     }
 }
+//Normaler seiten-ablauf
 init();
 function init() {
     siteHandle();
     eventHandler();
-    console.log(curSite);
     divCreate();
     parsingJson();
     setTimeout(listenToSelection, 100);
     listenToSelection();
     if (curSite == "index" && siteVisited() == true) {
-        visitingIndex();
+        createAuswahltDiv();
         loadDisplay("fortschritt");
         setTimeout(function () { loadDisplay("ausgewahlt"); }, 100);
         getServerMessage("https://gis-communication.herokuapp.com/");

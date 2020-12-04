@@ -92,7 +92,7 @@ body {
 }
 
 
-#PartsDiv > div #selectedHolder{
+#PartsDiv > div #selectedObj{
     background-color: rgba(250, 202, 244, 0.507);
 }
 #PartsDiv > div #selectedIce{
