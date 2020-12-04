@@ -309,7 +309,7 @@ function showServerMessage(_message: ServerMessage): void {
     }
 }
 
-//Normaler seiten-ablauf
+//Normaler seiten-ablauf( Einfach für die übersicht)
 init();
 function init(): void {
     siteHandle();

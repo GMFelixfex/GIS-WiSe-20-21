@@ -287,7 +287,7 @@ function showServerMessage(_message) {
         messageDiv.style.color = "red";
     }
 }
-//Normaler seiten-ablauf
+//Normaler seiten-ablauf( Einfach für die übersicht)
 init();
 function init() {
     siteHandle();
