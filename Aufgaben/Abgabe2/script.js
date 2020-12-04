@@ -101,6 +101,7 @@ function loadDisplay(_ausw) {
         }
     }
     displayRes(saveEis, _ausw);
+    //Extrafunktion falls die Seite die Index seite ist
     if (curSite == "index") {
         sendServer = new ServerPaket(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
         let sentJson = JSON.stringify(sendServer);

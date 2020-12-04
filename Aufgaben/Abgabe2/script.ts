@@ -60,7 +60,6 @@ class EisBase {
 
 //#region Element Erstellung
 //Parsing and Creation of Elements/Selection (läd aus der data.json alle  elemnte in das saveObject array)
-
 async function jayson(): Promise<string> {
     let response: Response = await fetch("data.json");
     let json: JSON = await response.json();
@@ -70,7 +69,6 @@ async function jayson(): Promise<string> {
 
 async function parsingJson(): Promise<void> {
     if (curSite != "index") { loadDisplay("fortschritt"); }
-
     let pjson: Parsing[] = JSON.parse(await jayson());
     let i: number = 0;
     for (let key in pjson) {
@@ -94,7 +92,6 @@ function divCreate(): void {
 
 
 //#region selection handeling (Schaut ob einer der Außwahlmöglichkeiten ausgewählt ist)
-
 function listenToSelection(): void {
     let arrGenerated: HTMLCollectionOf<Element> = document.getElementsByClassName("generated");
     for (let i: number = 0; i < arrGenerated.length; i++) {
@@ -131,6 +128,7 @@ function loadDisplay(_ausw: string): void {
 
     displayRes(saveEis, _ausw);
 
+    //Extrafunktion falls die Seite die Index seite ist
     if (curSite == "index") {
         sendServer = new ServerPaket(saveEis[0], saveEis[1], saveEis[2], saveEis[3]);
         let sentJson: string = JSON.stringify(sendServer);
@@ -313,7 +311,6 @@ function showServerMessage(_message: ServerMessage): void {
 
 //Normaler seiten-ablauf
 init();
-
 function init(): void {
     siteHandle();
     eventHandler();
