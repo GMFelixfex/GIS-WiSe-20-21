@@ -6,6 +6,7 @@ let saveTopping = [];
 let saveIce = [];
 let saveHolder = [];
 let selectedParts = [-1, -1, -1, -1];
+let curSite = "";
 let sendServer;
 class ServerPaket {
     constructor(_waffel, _belag, _eis, _halter) {
@@ -121,7 +122,7 @@ class Holder {
 }
 //Parsing and Creation of Elements/Selection
 async function parsingJson() {
-    if (sitehandle() != "index") {
+    if (siteHandle() != "index") {
         loadDisplay("fortschritt");
     }
     let pjson = JSON.parse(await jayson());
@@ -130,25 +131,25 @@ async function parsingJson() {
     let k = 0;
     let l = 0;
     for (let key in pjson) {
-        if (pjson[key].stil == "Waffel" && (sitehandle() == "Waffel")) {
+        if (pjson[key].stil == "Waffel" && (siteHandle() == "Waffel")) {
             let obj = new Waffel(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveWaffel[i] = obj;
             i++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Topping" && (sitehandle() == "Belag")) {
+        if (pjson[key].stil == "Topping" && (siteHandle() == "Belag")) {
             let obj = new Topping(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveTopping[j] = obj;
             j++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Ice" && (sitehandle() == "Eis")) {
+        if (pjson[key].stil == "Ice" && (siteHandle() == "Eis")) {
             let obj = new Ice(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveIce[k] = obj;
             k++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Holder" && (sitehandle() == "Halter")) {
+        if (pjson[key].stil == "Holder" && (siteHandle() == "Halter")) {
             let obj = new Holder(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveHolder[l] = obj;
             l++;
@@ -158,16 +159,16 @@ async function parsingJson() {
 }
 //#region Creation the Selection flexbox
 function defaultDivCreation() {
-    if (sitehandle() == "Waffel") {
+    if (siteHandle() == "Waffel") {
         divCreate("Waffel");
     }
-    if (sitehandle() == "Belag") {
+    if (siteHandle() == "Belag") {
         divCreate("Topping");
     }
-    if (sitehandle() == "Eis") {
+    if (siteHandle() == "Eis") {
         divCreate("Ice");
     }
-    if (sitehandle() == "Halter") {
+    if (siteHandle() == "Halter") {
         divCreate("Holder");
     }
 }
@@ -248,7 +249,7 @@ function loadDisplay(_ausw) {
         myHolder = new Holder(pHol.name, pHol.preis, pHol.stil, pHol.path);
     }
     displayRes(myWaffel, myTopping, myIce, myHolder, _ausw);
-    if (sitehandle() == "index") {
+    if (siteHandle() == "index") {
         sendServer = new ServerPaket(myWaffel, myTopping, myIce, myHolder);
         let sentJson = JSON.stringify(sendServer);
         localStorage.setItem("Configuration", sentJson);
@@ -295,25 +296,25 @@ function displayRes(_waf, _top, _ice, _hol, _ausw) {
     else {
         if (_waf != undefined) {
             ausWaffel.innerHTML = "<img src = " + _waf.path + "></img>";
-            if (sitehandle() != "index") {
+            if (siteHandle() != "index") {
                 ausWaffel.style.marginTop = "-300px";
             }
         }
         if (_top != undefined) {
             ausTopping.innerHTML = "<img src = " + _top.path + "></img>";
-            if (sitehandle() != "index") {
+            if (siteHandle() != "index") {
                 ausTopping.style.marginTop = "-300px";
             }
         }
         if (_ice != undefined) {
             ausIce.innerHTML = "<img src = " + _ice.path + "></img>";
-            if (sitehandle() != "index") {
+            if (siteHandle() != "index") {
                 ausIce.style.marginTop = "-300px";
             }
         }
         if (_hol != undefined) {
             ausHolder.innerHTML = "<img src = " + _hol.path + "></img>";
-            if (sitehandle() != "index") {
+            if (siteHandle() != "index") {
                 ausHolder.style.marginTop = "-300px";
             }
         }
@@ -355,25 +356,25 @@ function displayProduct(_waf, _top, _ice, _hol) {
 //#endregion
 //#region Buttonlogic und Display
 function saveButton() {
-    if ((sitehandle() == "Waffel") && selectedParts[3] != -1) {
+    if ((siteHandle() == "Waffel") && selectedParts[3] != -1) {
         let obj = saveWaffel[selectedParts[3]];
         let myJSON = JSON.stringify(obj);
         localStorage.setItem("Waffel", myJSON);
         window.open("index.html", "_self");
     }
-    if ((sitehandle() == "Belag") && selectedParts[2] != -1) {
+    if ((siteHandle() == "Belag") && selectedParts[2] != -1) {
         let obj2 = saveTopping[selectedParts[2]];
         let myJSON2 = JSON.stringify(obj2);
         localStorage.setItem("Belag", myJSON2);
         window.open("iwaffel.html", "_self");
     }
-    if ((sitehandle() == "Eis") && selectedParts[1] != -1) {
+    if ((siteHandle() == "Eis") && selectedParts[1] != -1) {
         let obj3 = saveIce[selectedParts[1]];
         let myJSON3 = JSON.stringify(obj3);
         localStorage.setItem("Eis", myJSON3);
         window.open("ibelag.html", "_self");
     }
-    if ((sitehandle() == "Halter") && selectedParts[0] != -1) {
+    if ((siteHandle() == "Halter") && selectedParts[0] != -1) {
         let obj4 = saveHolder[selectedParts[0]];
         let myJSON4 = JSON.stringify(obj4);
         localStorage.setItem("Halter", myJSON4);
@@ -384,14 +385,30 @@ function startButton() {
     localStorage.clear();
     window.open("ihalter.html", "_self");
 }
+function backButton() {
+    if (siteHandle() == "Waffel") {
+        window.open("ibelag.html", "_self");
+    }
+    if (siteHandle() == "Belag") {
+        window.open("ieis.html", "_self");
+    }
+    if (siteHandle() == "Eis") {
+        console.log("back");
+        window.open("ihalter.html", "_self");
+    }
+    if (siteHandle() == "Halter") {
+        window.open("index.html", "_self");
+    }
+}
 //#endregion
 //#region Multi-Eventhandler
-if (sitehandle() == "index") {
+if (siteHandle() == "index") {
     document.getElementById("startButton").addEventListener("click", startButton);
 }
-if (sitehandle() != "index") {
+if (siteHandle() != "index") {
     document.addEventListener("load", function () { loadDisplay("fortschritt"); });
     document.getElementById("saveButton").addEventListener("click", saveButton);
+    document.getElementById("backButton").addEventListener("click", backButton);
 }
 //#endregion
 //Reloads the Site to ensure generated emlemnt are loaded
@@ -409,7 +426,7 @@ async function jayson() {
     let jsonString = JSON.stringify(json);
     return jsonString;
 }
-function sitehandle() {
+function siteHandle() {
     let currentSite = document.getElementById("Headline");
     if (currentSite.innerHTML == "Your Icecream Generator: Start/End") {
         return "index";
@@ -490,13 +507,13 @@ function init() {
     parsingJson();
     setTimeout(listenToSelection, 100);
     listenToSelection();
-    if (sitehandle() == "index" && siteVisited() == true) {
+    if (siteHandle() == "index" && siteVisited() == true) {
         visitingIndex();
         loadDisplay("fortschritt");
         setTimeout(function () { loadDisplay("ausgewahlt"); }, 100);
         getServerMessage("https://gis-communication.herokuapp.com/");
     }
-    else if (sitehandle() == "index" && siteVisited() == false) {
+    else if (siteHandle() == "index" && siteVisited() == false) {
         startSite();
     }
 }

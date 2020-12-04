@@ -6,6 +6,7 @@ let saveTopping: Topping[] = [];
 let saveIce: Ice[] = [];
 let saveHolder: Holder[] = [];
 let selectedParts: number[] = [-1, -1, -1, -1];
+let curSite: string = "";
 
 let sendServer: ServerPaket;
 
@@ -157,7 +158,7 @@ class Holder {
 
 //Parsing and Creation of Elements/Selection
 async function parsingJson(): Promise<void> {
-    if (sitehandle() != "index") { loadDisplay("fortschritt"); }
+    if (siteHandle() != "index") { loadDisplay("fortschritt"); }
 
     let pjson: Parsing[] = JSON.parse(await jayson());
     let i: number = 0;
@@ -166,25 +167,25 @@ async function parsingJson(): Promise<void> {
     let l: number = 0;
     for (let key in pjson) {
 
-        if (pjson[key].stil == "Waffel" && (sitehandle() == "Waffel")) {
+        if (pjson[key].stil == "Waffel" && (siteHandle() == "Waffel")) {
             let obj: Waffel = new Waffel(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveWaffel[i] = obj;
             i++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Topping" && (sitehandle() == "Belag")) {
+        if (pjson[key].stil == "Topping" && (siteHandle() == "Belag")) {
             let obj: Topping = new Topping(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveTopping[j] = obj;
             j++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Ice" && (sitehandle() == "Eis")) {
+        if (pjson[key].stil == "Ice" && (siteHandle() == "Eis")) {
             let obj: Ice = new Ice(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveIce[k] = obj;
             k++;
             obj.flexCreate();
         }
-        if (pjson[key].stil == "Holder" && (sitehandle() == "Halter")) {
+        if (pjson[key].stil == "Holder" && (siteHandle() == "Halter")) {
             let obj: Holder = new Holder(pjson[key].name, pjson[key].preis, pjson[key].stil, pjson[key].path);
             saveHolder[l] = obj;
             l++;
@@ -195,16 +196,16 @@ async function parsingJson(): Promise<void> {
 
 //#region Creation the Selection flexbox
 function defaultDivCreation(): void {
-    if (sitehandle() == "Waffel") {
+    if (siteHandle() == "Waffel") {
         divCreate("Waffel");
     }
-    if (sitehandle() == "Belag") {
+    if (siteHandle() == "Belag") {
         divCreate("Topping");
     }
-    if (sitehandle() == "Eis") {
+    if (siteHandle() == "Eis") {
         divCreate("Ice");
     }
-    if (sitehandle() == "Halter") {
+    if (siteHandle() == "Halter") {
         divCreate("Holder");
     }
 }
@@ -307,7 +308,7 @@ function loadDisplay(_ausw: string): void {
     }
     displayRes(myWaffel, myTopping, myIce, myHolder, _ausw);
 
-    if (sitehandle() == "index") {
+    if (siteHandle() == "index") {
         sendServer = new ServerPaket(myWaffel, myTopping, myIce, myHolder);
         let sentJson: string = JSON.stringify(sendServer);
         localStorage.setItem("Configuration", sentJson);
@@ -356,19 +357,19 @@ function displayRes(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder, _ausw:
     } else {
         if (_waf != undefined) {
             ausWaffel.innerHTML = "<img src = " + _waf.path + "></img>";
-            if (sitehandle() != "index") {ausWaffel.style.marginTop = "-300px"; }
+            if (siteHandle() != "index") { ausWaffel.style.marginTop = "-300px"; }
         }
         if (_top != undefined) {
             ausTopping.innerHTML = "<img src = " + _top.path + "></img>";
-            if (sitehandle() != "index") {ausTopping.style.marginTop = "-300px"; }
+            if (siteHandle() != "index") { ausTopping.style.marginTop = "-300px"; }
         }
         if (_ice != undefined) {
             ausIce.innerHTML = "<img src = " + _ice.path + "></img>";
-            if (sitehandle() != "index") {ausIce.style.marginTop = "-300px"; }
+            if (siteHandle() != "index") { ausIce.style.marginTop = "-300px"; }
         }
         if (_hol != undefined) {
             ausHolder.innerHTML = "<img src = " + _hol.path + "></img>";
-            if (sitehandle() != "index") {ausHolder.style.marginTop = "-300px"; }
+            if (siteHandle() != "index") { ausHolder.style.marginTop = "-300px"; }
         }
     }
 
@@ -414,25 +415,25 @@ function displayProduct(_waf: Waffel, _top: Topping, _ice: Ice, _hol: Holder): v
 //#region Buttonlogic und Display
 
 function saveButton(): void {
-    if ((sitehandle() == "Waffel") && selectedParts[3] != -1) {
+    if ((siteHandle() == "Waffel") && selectedParts[3] != -1) {
         let obj: Waffel = saveWaffel[selectedParts[3]];
         let myJSON: string = JSON.stringify(obj);
         localStorage.setItem("Waffel", myJSON);
         window.open("index.html", "_self");
     }
-    if ((sitehandle() == "Belag") && selectedParts[2] != -1) {
+    if ((siteHandle() == "Belag") && selectedParts[2] != -1) {
         let obj2: Topping = saveTopping[selectedParts[2]];
         let myJSON2: string = JSON.stringify(obj2);
         localStorage.setItem("Belag", myJSON2);
         window.open("iwaffel.html", "_self");
     }
-    if ((sitehandle() == "Eis") && selectedParts[1] != -1) {
+    if ((siteHandle() == "Eis") && selectedParts[1] != -1) {
         let obj3: Ice = saveIce[selectedParts[1]];
         let myJSON3: string = JSON.stringify(obj3);
         localStorage.setItem("Eis", myJSON3);
         window.open("ibelag.html", "_self");
     }
-    if ((sitehandle() == "Halter") && selectedParts[0] != -1) {
+    if ((siteHandle() == "Halter") && selectedParts[0] != -1) {
         let obj4: Holder = saveHolder[selectedParts[0]];
         let myJSON4: string = JSON.stringify(obj4);
         localStorage.setItem("Halter", myJSON4);
@@ -445,23 +446,34 @@ function startButton(): void {
     localStorage.clear();
     window.open("ihalter.html", "_self");
 }
+
+function backButton(): void {
+    if (siteHandle() == "Waffel") {
+        window.open("ibelag.html", "_self");
+    }
+    if (siteHandle() == "Belag") {
+        window.open("ieis.html", "_self");
+    }
+    if (siteHandle() == "Eis") {
+        console.log("back");
+        window.open("ihalter.html", "_self");
+    }
+    if (siteHandle() == "Halter") {
+        window.open("index.html", "_self");
+    }
+}
 //#endregion
 
-
-
-
-
-
-
 //#region Multi-Eventhandler
-if (sitehandle() == "index") {
+if (siteHandle() == "index") {
     document.getElementById("startButton").addEventListener("click", startButton);
 
 }
 
-if (sitehandle() != "index") {
+if (siteHandle() != "index") {
     document.addEventListener("load", function (): void { loadDisplay("fortschritt"); });
     document.getElementById("saveButton").addEventListener("click", saveButton);
+    document.getElementById("backButton").addEventListener("click", backButton);
 }
 //#endregion
 
@@ -482,7 +494,7 @@ async function jayson(): Promise<string> {
     return jsonString;
 }
 
-function sitehandle(): string {
+function siteHandle(): string {
     let currentSite: HTMLElement = document.getElementById("Headline");
     if (currentSite.innerHTML == "Your Icecream Generator: Start/End") { return "index"; }
     if (currentSite.innerHTML == "Your Icecream Generator: Halter") { return "Halter"; }
@@ -568,12 +580,12 @@ function init(): void {
     setTimeout(listenToSelection, 100);
     listenToSelection();
 
-    if (sitehandle() == "index" && siteVisited() == true) {
+    if (siteHandle() == "index" && siteVisited() == true) {
         visitingIndex();
         loadDisplay("fortschritt");
         setTimeout(function (): void { loadDisplay("ausgewahlt"); }, 100);
         getServerMessage("https://gis-communication.herokuapp.com/");
-    } else if (sitehandle() == "index" && siteVisited() == false) {
+    } else if (siteHandle() == "index" && siteVisited() == false) {
         startSite();
     }
 
