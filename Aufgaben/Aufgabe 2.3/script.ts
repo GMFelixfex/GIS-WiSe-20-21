@@ -166,7 +166,7 @@ function split(array: number[], k: number, j: number): number[] {
     }
     return newArray;
 }
-*/
+
 
 
 
@@ -236,7 +236,7 @@ document.querySelector("h1").setAttribute("style", "margin: 100px");
 
 
 
-
+*/
 
 
 

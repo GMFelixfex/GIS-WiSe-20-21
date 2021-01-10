@@ -161,7 +161,7 @@ function displayRes(_arrEisBase: EisBase[], _ausw: string): void {
     }
 }
 
-//Erstellt den text  mit dem preis an der Seite der Index(Start/End) Seite
+//Erstellt den text  mit dem preis an der Seite der Index(Start/End) Seite (Übergabeparameter kein array, um übersicht zu halten)
 function displayProduct(_waf: EisBase, _top: EisBase, _ice: EisBase, _hol: EisBase): void {
     let produktDiv: HTMLElement = document.getElementById("Produkt");
     produktDiv.innerHTML = "<b><u>Ihr Eis: </u></b><br>";
@@ -172,7 +172,7 @@ function displayProduct(_waf: EisBase, _top: EisBase, _ice: EisBase, _hol: EisBa
         if (_ice != undefined) {
             produktDiv.innerHTML += _ice.name + "-Eis ";
             price += _ice.preis;
-        } else {produktDiv.innerHTML += "Eisloses Eis "; }
+        } else { produktDiv.innerHTML += "Eisloses Eis "; }
         if (_top != undefined) {
             produktDiv.innerHTML += " mit " + _top.name;
             price += _top.preis;
@@ -180,7 +180,7 @@ function displayProduct(_waf: EisBase, _top: EisBase, _ice: EisBase, _hol: EisBa
         if (_hol != undefined) {
             produktDiv.innerHTML += " in einer(-em) " + _hol.name;
             price += _hol.preis;
-        } else {produktDiv.innerHTML += "ohne Halter"; }
+        } else { produktDiv.innerHTML += "ohne Halter"; }
         if (_waf != undefined) {
             produktDiv.innerHTML += " plus extra " + _waf.name;
             price += _waf.preis;
@@ -224,15 +224,7 @@ function eventHandler(): void {
 }
 //#endregion
 
-//Reloads the Site to ensure generated emlemnt are loaded
-let once: boolean = true;
-function preloadElements(time: number): void {
-    if (once) {
-        console.log("Elemnte Preloaden");
-        once = false;
-        setTimeout(preloadElements, time);
-    }
-}
+
 
 //WICHTIG: Setzt die derzeitige Seite fest; wird sehr viel im verlauf des Codes gebraucht
 function siteHandle(): void {
@@ -317,12 +309,11 @@ function init(): void {
     divCreate();
     parsingJson();
     setTimeout(listenToSelection, 100);
-    listenToSelection();
-
+    
     if (curSite == "index" && siteVisited() == true) {
         createAuswahltDiv();
         loadDisplay("fortschritt");
-        setTimeout(function (): void { loadDisplay("ausgewahlt"); }, 100);
+        loadDisplay("ausgewahlt");
         getServerMessage("https://gis-communication.herokuapp.com/");
     } else if (curSite == "index" && siteVisited() == false) {
         startSite();

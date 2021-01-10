@@ -1,0 +1,16 @@
+#buttonReset {
+    margin: -100px 0px 0px 600px;
+    position: absolute;
+    width: 200px;
+    height: 50px;
+}
+#buttonGenerate {
+    margin: -100px 0px 0px 900px;
+    position: absolute;
+    width: 200px;
+    height: 50px;
+}
+#canvi {
+    width: fit-content;
+    height: fit-content;
+}

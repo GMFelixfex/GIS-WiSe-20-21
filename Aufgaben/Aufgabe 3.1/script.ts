@@ -1,4 +1,4 @@
-"use strict";
+
 console.log("init");
 /*
 let numArray: number[] = [23, 45, 30, 20, 39, 49, 60, 78, 11, 21, 9, 1, 13, -1];
@@ -166,7 +166,7 @@ function split(array: number[], k: number, j: number): number[] {
     }
     return newArray;
 }
-
+*/
 
 
 
@@ -207,7 +207,7 @@ class Rechtecke {
 
 
 let recta: Rechtecke[] = [];
-randomRect();
+//randomRect();
 function randomRect(): void {
     for (let i: number = 0; i < 5; i++) {
         recta[i] = new Rechtecke;
@@ -227,6 +227,25 @@ function resetAll(): void {
     myNode.innerHTML = "";
 }
 
+let formData: FormData = new FormData(document.forms[0]);
+
+for (let entry of formData) {
+    console.log(entry);
+    console.log("name: " + entry[0]);
+    console.log("value: " + entry[1]);
+}
+
+
+
+
+async function getSMessage(): Promise<void> {
+    let url: string = "https://gis-example.herokuapp.com/a";
+    let query: URLSearchParams = new URLSearchParams(<any>formData);
+    url = url + "?" + query.toString();
+    let response: Response = await fetch(url);
+    console.log(response);
+
+}
 
 
 
@@ -236,5 +255,12 @@ document.querySelector("h1").setAttribute("style", "margin: 100px");
 
 
 
-*/
-//# sourceMappingURL=script.js.map
+
+
+
+
+
+
+
+
+

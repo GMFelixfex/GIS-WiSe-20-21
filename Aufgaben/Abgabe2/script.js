@@ -133,7 +133,7 @@ function displayRes(_arrEisBase, _ausw) {
         }
     }
 }
-//Erstellt den text  mit dem preis an der Seite der Index(Start/End) Seite
+//Erstellt den text  mit dem preis an der Seite der Index(Start/End) Seite (Übergabeparameter kein array, um übersicht zu halten)
 function displayProduct(_waf, _top, _ice, _hol) {
     let produktDiv = document.getElementById("Produkt");
     produktDiv.innerHTML = "<b><u>Ihr Eis: </u></b><br>";
@@ -197,15 +197,6 @@ function eventHandler() {
     }
 }
 //#endregion
-//Reloads the Site to ensure generated emlemnt are loaded
-let once = true;
-function preloadElements(time) {
-    if (once) {
-        console.log("Elemnte Preloaden");
-        once = false;
-        setTimeout(preloadElements, time);
-    }
-}
 //WICHTIG: Setzt die derzeitige Seite fest; wird sehr viel im verlauf des Codes gebraucht
 function siteHandle() {
     let currentSite = document.getElementById("Headline");
@@ -295,11 +286,10 @@ function init() {
     divCreate();
     parsingJson();
     setTimeout(listenToSelection, 100);
-    listenToSelection();
     if (curSite == "index" && siteVisited() == true) {
         createAuswahltDiv();
         loadDisplay("fortschritt");
-        setTimeout(function () { loadDisplay("ausgewahlt"); }, 100);
+        loadDisplay("ausgewahlt");
         getServerMessage("https://gis-communication.herokuapp.com/");
     }
     else if (curSite == "index" && siteVisited() == false) {

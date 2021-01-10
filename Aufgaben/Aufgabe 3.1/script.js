@@ -166,75 +166,65 @@ function split(array: number[], k: number, j: number): number[] {
     }
     return newArray;
 }
-
-
-
-
+*/
 class Rechtecke {
-    posX: number;
-    posY: number;
-    width: number;
-    height: number;
-    color: string;
-
-
-    constructor(_posX?: number, _posY?: number, _width?: number, _height?: number, _color?: string) {
-        if (_posX === undefined) _posX = Math.round(Math.random() * 500);
-        if (_posY === undefined) _posY = Math.round(Math.random() * 500);
-        if (_width === undefined) _width = Math.round(Math.random() * 500);
-        if (_height === undefined) _height = Math.round(Math.random() * 500);
-        if (_color === undefined) _color = "#" + (Math.random() * 0xFFFFFF << 0).toString(16);
+    constructor(_posX, _posY, _width, _height, _color) {
+        if (_posX === undefined)
+            _posX = Math.round(Math.random() * 500);
+        if (_posY === undefined)
+            _posY = Math.round(Math.random() * 500);
+        if (_width === undefined)
+            _width = Math.round(Math.random() * 500);
+        if (_height === undefined)
+            _height = Math.round(Math.random() * 500);
+        if (_color === undefined)
+            _color = "#" + (Math.random() * 0xFFFFFF << 0).toString(16);
         this.posX = _posX;
         this.posY = _posY;
         this.width = _width;
         this.height = _height;
         this.color = _color;
-
-
     }
-    public drawRect(): void {
-        let newElemnt: HTMLDivElement = document.createElement("div");
-        let canvi: HTMLElement = document.getElementById("canvi");
+    drawRect() {
+        let newElemnt = document.createElement("div");
+        let canvi = document.getElementById("canvi");
         canvi.appendChild(newElemnt);
         newElemnt.setAttribute("style", "position: absolute" + ";background-color:" + this.color + ";height:" + this.height + "px;width:" + this.width + "px;margin: " + this.posY + "px 0" + "px 0px " + this.posX + "px");
         newElemnt.setAttribute("class", "generated");
-
-
     }
-
-
 }
-
-
-let recta: Rechtecke[] = [];
-randomRect();
-function randomRect(): void {
-    for (let i: number = 0; i < 5; i++) {
+let recta = [];
+//randomRect();
+function randomRect() {
+    for (let i = 0; i < 5; i++) {
         recta[i] = new Rechtecke;
     }
-    for (let i: number = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
         recta[i].drawRect();
     }
     setTimeout(randomRect, 1000);
 }
-
-function drawRectDiv(_posX?: number, _posY?: number, _width?: number, _height?: number, _color?: string): void {
-    let recta2: Rechtecke = new Rechtecke(_posX,  _posY, _width, _height, _color);
+function drawRectDiv(_posX, _posY, _width, _height, _color) {
+    let recta2 = new Rechtecke(_posX, _posY, _width, _height, _color);
     recta2.drawRect();
 }
-function resetAll(): void {
-    const myNode: HTMLElement = document.getElementById("canvi");
+function resetAll() {
+    const myNode = document.getElementById("canvi");
     myNode.innerHTML = "";
 }
-
-
-
-
+let formData = new FormData(document.forms[0]);
+for (let entry of formData) {
+    console.log(entry);
+    console.log("name: " + entry[0]);
+    console.log("value: " + entry[1]);
+}
+async function getSMessage() {
+    let url = "https://gis-example.herokuapp.com/a";
+    let query = new URLSearchParams(formData);
+    url = url + "?" + query.toString();
+    let response = await fetch(url);
+    console.log(response);
+}
 document.querySelector("h1").innerHTML = "Mein übi";
 document.querySelector("h1").setAttribute("style", "margin: 100px");
-
-
-
-
-*/
 //# sourceMappingURL=script.js.map
