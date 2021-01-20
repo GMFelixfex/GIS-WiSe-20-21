@@ -80,7 +80,7 @@ var Abgabe3;
     }
     async function getSMessage(_formdata) {
         let path = getPage();
-        let url = "http://localhost:8100/" + path;
+        let url = "https://gisfelixfex.herokuapp.com/" + path;
         let query = new URLSearchParams(_formdata);
         console.log(query);
         url = url + "?" + query.toString();

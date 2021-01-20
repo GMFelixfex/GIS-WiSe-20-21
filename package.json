@@ -9,8 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node PServer.js",
-    "start2": "node PServer.js"
+    "start": "node PServer.js"
   },
   "repository": {
     "type": "git",

@@ -84,7 +84,7 @@ namespace Abgabe3 {
 
     async function getSMessage(_formdata: FormData): Promise<void> {
         let path: string = getPage();
-        let url: string = "http://localhost:8100/" + path;
+        let url: string = "https://gisfelixfex.herokuapp.com/" + path;
         let query: URLSearchParams = new URLSearchParams(<any>_formdata);
         console.log(query);
         url = url + "?" + query.toString();
