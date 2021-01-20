@@ -1,5 +1,5 @@
+namespace Aufgabe2_1 {
 
-/*
 function a2(): void {
     let i: number = 2;
 
@@ -135,4 +135,5 @@ function schach(höhe: number, breite: number): string {
     return call;
 }
 console.log(schach(8, 20));
-*/
+
+}

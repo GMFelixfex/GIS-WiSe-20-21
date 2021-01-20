@@ -2,7 +2,7 @@ body {
     font-family: sans-serif;
 }
 #Background {
-    background-image:   url("../Gis2/media/bg.png");
+    background-image:   url("../../media/bg.png");
     background-repeat:  repeat;
     margin: 0;
 }
@@ -15,10 +15,7 @@ a {
     text-decoration: none;
     color: white;
 }
-audio {
-    border-radius: 30px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(182, 143, 143, 0.493);
-}
+
 .Taskbar {
     position: fixed;
     background-color: rgb(56, 21, 102);
@@ -102,6 +99,20 @@ button {
     width: 40%;
 }
 
-#getDB {
+.getDB {
     width: 100%;
+}
+
+#ErrorText {
+    margin-left: 40px;
+    margin-top: 20px;
+    background-color: rgba(250, 202, 244, 0.507);
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+div p {
+    margin: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

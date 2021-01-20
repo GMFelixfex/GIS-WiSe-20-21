@@ -1,5 +1,5 @@
 
-console.log("init");
+namespace Aufgabe2_3 {
 /*
 let numArray: number[] = [23, 45, 30, 20, 39, 49, 60, 78, 11, 21, 9, 1, 13, -1];
 
@@ -233,10 +233,10 @@ function resetAll(): void {
 document.querySelector("h1").innerHTML = "Mein übi";
 document.querySelector("h1").setAttribute("style", "margin: 100px");
 
-
-
-
 */
+}
+
+
 
 
 

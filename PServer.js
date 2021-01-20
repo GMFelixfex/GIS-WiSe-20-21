@@ -2,27 +2,98 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PServer = void 0;
 const Http = require("http");
+const url = require("url");
+const Mongo = require("mongodb");
 var PServer;
 (function (PServer) {
-    console.log("Starting server");
+    let users;
+    class Person {
+        constructor(_fname, _lname, _adrr, _email, _password) {
+            this.vorname = _fname;
+            this.nachname = _lname;
+            this.adresse = _adrr;
+            this.email = _email;
+            this.password = _password;
+        }
+    }
     let port = Number(process.env.PORT);
-    if (!port)
+    if (!port) {
         port = 8100;
-    let server = Http.createServer();
-    server.addListener("request", handleRequest);
-    server.addListener("listening", handleListen);
-    server.listen(port);
+    }
+    let dbURL = "mongodb+srv://Felixfex:!Fex1341@forgisgm.koewa.mongodb.net/<dbname>?retryWrites=true&w=majority";
+    console.log(process.argv.slice(2));
+    if (process.argv.slice(2)[0] == "local") {
+        dbURL = "mongodb://127.0.0.1:27017";
+    }
+    connectToDatabase(dbURL);
+    startServer(port);
+    //Region: Functions Start
+    function startServer(_port) {
+        console.log("Starting server" + _port);
+        let server = Http.createServer();
+        server.addListener("request", handleRequest);
+        server.addListener("listening", handleListen);
+        server.listen(_port);
+    }
+    async function connectToDatabase(_url) {
+        let options = { useNewUrlParser: true, useUnifiedTopology: true };
+        let mongoClient = new Mongo.MongoClient(_url, options);
+        await mongoClient.connect();
+        users = mongoClient.db("Test").collection("Users");
+        console.log("Connection Established", users != undefined);
+    }
     function handleListen() {
         console.log("Listening");
     }
-    function handleRequest(_request, _response) {
-        console.log("I hear voices!");
+    async function handleRequest(_request, _response) {
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
-        _response.write(_request.url);
-        _response.end();
-        console.log(_request.url);
+        let collCursor = users.find();
+        let findingsArray = await collCursor.toArray();
+        let fun = _request.url;
+        console.log("I hear voices from: " + fun);
+        let fun2 = url.parse(fun, true);
+        let fun3 = fun2.query;
+        let persi;
+        let sendstring = "";
+        for (let i = 0; i < findingsArray.length; i++) {
+            sendstring += "<p>" + findingsArray[i].vorname + " " + findingsArray[i].nachname + "</p>";
+        }
+        if (fun2.pathname == "/index.html") {
+            persi = new Person(fun3.fname, fun3.lname, fun3.adrr, fun3.email, fun3.password);
+            let filterinput = await users.findOne({ "email": fun3.email });
+            if (filterinput == null) {
+                users.insertOne(persi);
+                _response.write("<p> User created </p>");
+                _response.end();
+            }
+            else {
+                _response.write("<p> User with that E-mail already exist </p>");
+                _response.end();
+            }
+        }
+        if (fun2.pathname == "/loaduser.html") {
+            _response.write(sendstring);
+            _response.end();
+        }
+        if (fun2.pathname == "/singin.html") {
+            let filterinput = await users.findOne({ "email": fun3.email, "password": fun3.password });
+            let filterEmail = await users.findOne({ "email": fun3.email });
+            let textBack = "";
+            if (filterEmail != null) {
+                if (filterinput != null) {
+                    textBack = "Erfolgreich Eingelogt";
+                }
+                else {
+                    textBack = "Passwort ist falsch";
+                }
+            }
+            else {
+                textBack = "Nutzer mit dieser Email existiert noch nicht Registrieren sie sich bitte";
+            }
+            _response.write("<p>" + textBack + "</p>");
+            _response.end();
+        }
     }
 })(PServer = exports.PServer || (exports.PServer = {}));
-//node PServer.js
 //# sourceMappingURL=PServer.js.map

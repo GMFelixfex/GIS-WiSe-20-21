@@ -1,5 +1,6 @@
+namespace Aufgabe2_2 {
 /*
-console.log("init");
+    console.log("init");
 
 let numArray: number[] = [23, 45, 30, 20, 39, 49, 60, 78, 11, 21, 9, 1, 13, -1];
 
@@ -216,11 +217,7 @@ function randomRect(): void {
 
 
 
-*/
 
-
-
-/*
 context.strokeStyle = "red";
 
 context.lineWidth = 6;
@@ -236,3 +233,4 @@ context.lineTo(250, 140);
 context.closePath();
 context.stroke();
 */
+}
