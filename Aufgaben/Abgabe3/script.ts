@@ -9,15 +9,27 @@ namespace Abgabe3 {
     subButton.addEventListener("click", setValue);
 
     function setValue(): void {
-        let fname: HTMLInputElement = <HTMLInputElement>document.getElementById("fname");
+        let inputs: HTMLCollectionOf<HTMLInputElement>;
+        let missingBool: boolean = false;
+        inputs = document.getElementsByTagName("input");
+
+        for (let i: number = 0; i < inputs.length; i++) {
+            if (inputs[i].value == "") {
+                inputs[i].style.border = "1px solid rgb(255, 60, 60)";
+                inputs[i].style.backgroundColor = "rgb(255, 214, 214)";
+                missingBool = true;
+            } else {
+                inputs[i].style.border = "1px solid #ccc";
+                inputs[i].style.backgroundColor = "lightgrey";
+            }
+
+        }
+
+        /*let fname: HTMLInputElement = <HTMLInputElement>document.getElementById("fname");
         let lname: HTMLInputElement = <HTMLInputElement>document.getElementById("lname");
         let adrr: HTMLInputElement = <HTMLInputElement>document.getElementById("adrr");
         let email: HTMLInputElement = <HTMLInputElement>document.getElementById("email");
         let password: HTMLInputElement = <HTMLInputElement>document.getElementById("password");
-        console.log("data");
-        let page: string = getPage();
-
-        let missingBool: boolean = false;
 
         //checkt die verschiedenen Eingabefelder und makiert sie falls etwas fehlt
         if (page != "loaduser.html") {
@@ -64,6 +76,7 @@ namespace Abgabe3 {
                 password.style.backgroundColor = "lightgrey";
             }
         }
+        */
 
         //frägt ab ob alle daten vorhanden sind wenn nicht gibt es einen Text aus 
         let bod: HTMLElement = document.getElementById("ErrorText");
@@ -102,15 +115,3 @@ namespace Abgabe3 {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
