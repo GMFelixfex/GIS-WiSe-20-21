@@ -30,7 +30,7 @@ export namespace PServer {
     }
 
     let users: Mongo.Collection;
-    
+
     //Portfestlegung
     let port: number = Number(process.env.PORT);
     if (!port) {
@@ -56,7 +56,7 @@ export namespace PServer {
         server.addListener("listening", handleListen);
         server.listen(_port);
     }
-    
+
     async function connectToDatabase(_url: string): Promise<void> {
         let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
         let mongoClient: Mongo.MongoClient = new Mongo.MongoClient(_url, options);

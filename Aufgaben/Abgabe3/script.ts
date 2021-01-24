@@ -12,7 +12,8 @@ namespace Abgabe3 {
         let inputs: HTMLCollectionOf<HTMLInputElement>;
         let missingBool: boolean = false;
         inputs = document.getElementsByTagName("input");
-
+        
+        //Tested ob etwas von den Eigaben fehlt
         for (let i: number = 0; i < inputs.length; i++) {
             if (inputs[i].value == "") {
                 inputs[i].style.border = "1px solid rgb(255, 60, 60)";
