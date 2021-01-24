@@ -22,7 +22,6 @@ namespace Abgabe3 {
                 inputs[i].style.border = "1px solid #ccc";
                 inputs[i].style.backgroundColor = "white";
             }
-
         }
 
         //frägt ab ob alle daten vorhanden sind wenn nicht gibt es einen Text aus 
@@ -36,7 +35,6 @@ namespace Abgabe3 {
             bod.innerHTML = "<p> Eingaben vergessen! Bitte alles rot makierte eintragen</p>";
             bod.style.width = "50%";
         }
-
     }
 
     //Sendet eine anfrage an den server und erwartet einen Rückantwort
@@ -51,7 +49,6 @@ namespace Abgabe3 {
         let message: string = await response.text();
         console.log(message);
         showServerMessage2(message);
-
     }
 
     //Zeigt die Antwort an
@@ -60,5 +57,4 @@ namespace Abgabe3 {
         bod.innerHTML = _message;
         bod.style.width = "50%";
     }
-
 }
