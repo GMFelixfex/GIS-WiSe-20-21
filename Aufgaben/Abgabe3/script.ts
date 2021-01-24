@@ -20,63 +20,10 @@ namespace Abgabe3 {
                 missingBool = true;
             } else {
                 inputs[i].style.border = "1px solid #ccc";
-                inputs[i].style.backgroundColor = "lightgrey";
+                inputs[i].style.backgroundColor = "white";
             }
 
         }
-
-        /*let fname: HTMLInputElement = <HTMLInputElement>document.getElementById("fname");
-        let lname: HTMLInputElement = <HTMLInputElement>document.getElementById("lname");
-        let adrr: HTMLInputElement = <HTMLInputElement>document.getElementById("adrr");
-        let email: HTMLInputElement = <HTMLInputElement>document.getElementById("email");
-        let password: HTMLInputElement = <HTMLInputElement>document.getElementById("password");
-
-        //checkt die verschiedenen Eingabefelder und makiert sie falls etwas fehlt
-        if (page != "loaduser.html") {
-            if (page == "index.html") {
-                if (fname.value == "") {
-                    fname.style.border = "1px solid rgb(255, 60, 60)";
-                    fname.style.backgroundColor = "rgb(255, 214, 214)";
-                    missingBool = true;
-                } else {
-                    fname.style.border = "1px solid #ccc";
-                    fname.style.backgroundColor = "lightgrey";
-                }
-                if (lname.value == "") {
-                    lname.style.border = "1px solid rgb(255, 60, 60)";
-                    lname.style.backgroundColor = "rgb(255, 214, 214)";
-                    missingBool = true;
-                } else {
-                    lname.style.border = "1px solid #ccc";
-                    lname.style.backgroundColor = "lightgrey";
-                }
-                if (adrr.value == "") {
-                    adrr.style.border = "1px solid rgb(255, 60, 60)";
-                    adrr.style.backgroundColor = "rgb(255, 214, 214)";
-                    missingBool = true;
-                } else {
-                    adrr.style.border = "1px solid #ccc";
-                    adrr.style.backgroundColor = "lightgrey";
-                }
-            }
-            if (email.value == "") {
-                email.style.border = "1px solid rgb(255, 60, 60)";
-                email.style.backgroundColor = "rgb(255, 214, 214)";
-                missingBool = true;
-            } else {
-                email.style.border = "1px solid #ccc";
-                email.style.backgroundColor = "lightgrey";
-            }
-            if (password.value == "") {
-                password.style.border = "1px solid rgb(255, 60, 60)";
-                password.style.backgroundColor = "rgb(255, 214, 214)";
-                missingBool = true;
-            } else {
-                password.style.border = "1px solid #ccc";
-                password.style.backgroundColor = "lightgrey";
-            }
-        }
-        */
 
         //frägt ab ob alle daten vorhanden sind wenn nicht gibt es einen Text aus 
         let bod: HTMLElement = document.getElementById("ErrorText");
