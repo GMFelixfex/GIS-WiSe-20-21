@@ -20,7 +20,7 @@ namespace Abgabe3 {
                 missingBool = true;
             } else {
                 inputs[i].style.border = "1px solid #ccc";
-                inputs[i].style.backgroundColor = "white";
+                inputs[i].style.backgroundColor = "rgb(234, 246, 255)";
             }
         }
 
@@ -28,7 +28,7 @@ namespace Abgabe3 {
         let bod: HTMLElement = document.getElementById("ErrorText");
         if (missingBool == false) {
             let formData: FormData = new FormData(document.forms[0]);
-            bod.innerHTML = "Es könnte etwas dauern bis der Server antwortet, also haben sie bitte etwas Geduld";
+            bod.innerHTML = "<p> Es könnte etwas dauern bis der Server antwortet, also haben sie bitte etwas Geduld </p>";
             bod.style.width = "50%";
             getSMessage(formData);
         } else {

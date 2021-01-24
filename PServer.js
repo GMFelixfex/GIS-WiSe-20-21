@@ -6,7 +6,6 @@ const url = require("url");
 const Mongo = require("mongodb");
 var PServer;
 (function (PServer) {
-    let users;
     class Person {
         constructor(_fname, _lname, _adrr, _email, _password) {
             this.vorname = _fname;
@@ -16,10 +15,13 @@ var PServer;
             this.password = _password;
         }
     }
+    let users;
+    //Portfestlegung
     let port = Number(process.env.PORT);
     if (!port) {
         port = 8100;
     }
+    //URL-Auswahl
     let dbURL = "mongodb+srv://Felixfex:!Fex1341@forgisgm.koewa.mongodb.net/<dbname>?retryWrites=true&w=majority";
     console.log(process.argv.slice(2));
     if (process.argv.slice(2)[0] == "local") {
@@ -27,7 +29,7 @@ var PServer;
     }
     connectToDatabase(dbURL);
     startServer(port);
-    //Region: Functions Start
+    //#region Server Setup
     function startServer(_port) {
         console.log("Starting server" + _port);
         let server = Http.createServer();
@@ -42,6 +44,8 @@ var PServer;
         users = mongoClient.db("Test").collection("Users");
         console.log("Connection Established", users != undefined);
     }
+    //#endregion
+    //#region Request Handeling
     function handleListen() {
         console.log("Listening");
     }
@@ -55,45 +59,43 @@ var PServer;
         let fun2 = url.parse(fun, true);
         let fun3 = fun2.query;
         let persi;
-        let sendstring = "";
-        for (let i = 0; i < findingsArray.length; i++) {
-            sendstring += "<p>" + findingsArray[i].vorname + " " + findingsArray[i].nachname + "</p>";
-        }
+        let sendString = "";
+        //Für die Registrierungsseite
         if (fun2.pathname == "/index.html") {
             persi = new Person(fun3.fname, fun3.lname, fun3.adrr, fun3.email, fun3.password);
             let filterinput = await users.findOne({ "email": fun3.email });
             if (filterinput == null) {
                 users.insertOne(persi);
-                _response.write("<p> User created </p>");
-                _response.end();
+                sendString = "User created";
             }
             else {
-                _response.write("<p> User with that E-mail already exist </p>");
-                _response.end();
+                sendString = "User with that E-mail already exist";
             }
         }
+        //Für die Ausgabe seite
         if (fun2.pathname == "/loaduser.html") {
-            _response.write(sendstring);
-            _response.end();
+            for (let i = 0; i < findingsArray.length; i++) {
+                sendString += findingsArray[i].vorname + " " + findingsArray[i].nachname + "</br>";
+            }
         }
+        //Für die Einlog-Seite
         if (fun2.pathname == "/singin.html") {
             let filterinput = await users.findOne({ "email": fun3.email, "password": fun3.password });
             let filterEmail = await users.findOne({ "email": fun3.email });
-            let textBack = "";
             if (filterEmail != null) {
                 if (filterinput != null) {
-                    textBack = "Erfolgreich Eingelogt";
+                    sendString = "Erfolgreich Eingelogt";
                 }
                 else {
-                    textBack = "Passwort ist falsch";
+                    sendString = "Passwort ist falsch";
                 }
             }
             else {
-                textBack = "Nutzer mit dieser Email existiert noch nicht Registrieren sie sich bitte";
+                sendString = "Nutzer mit dieser Email existiert noch nicht Registrieren sie sich bitte";
             }
-            _response.write("<p>" + textBack + "</p>");
-            _response.end();
         }
+        _response.write("<p>" + sendString + "</p>");
+        _response.end();
     }
 })(PServer = exports.PServer || (exports.PServer = {}));
 //# sourceMappingURL=PServer.js.map

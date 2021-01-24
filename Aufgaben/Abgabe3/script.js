@@ -7,70 +7,26 @@ var Abgabe3;
     let subButton = document.getElementById("submitData");
     subButton.addEventListener("click", setValue);
     function setValue() {
-        let fname = document.getElementById("fname");
-        let lname = document.getElementById("lname");
-        let adrr = document.getElementById("adrr");
-        let email = document.getElementById("email");
-        let password = document.getElementById("password");
-        console.log("data");
-        let page = getPage();
+        let inputs;
         let missingBool = false;
-        //checkt die verschiedenen eingabefelder und makiert sie fals etwas fehlt
-        if (page != "loaduser.html") {
-            if (page == "index.html") {
-                if (fname.value == "") {
-                    fname.style.border = "1px solid rgb(255, 60, 60)";
-                    fname.style.backgroundColor = "rgb(255, 214, 214)";
-                    missingBool = true;
-                }
-                else {
-                    fname.style.border = "1px solid #ccc";
-                    fname.style.backgroundColor = "lightgrey";
-                }
-                if (lname.value == "") {
-                    lname.style.border = "1px solid rgb(255, 60, 60)";
-                    lname.style.backgroundColor = "rgb(255, 214, 214)";
-                    missingBool = true;
-                }
-                else {
-                    lname.style.border = "1px solid #ccc";
-                    lname.style.backgroundColor = "lightgrey";
-                }
-                if (adrr.value == "") {
-                    adrr.style.border = "1px solid rgb(255, 60, 60)";
-                    adrr.style.backgroundColor = "rgb(255, 214, 214)";
-                    missingBool = true;
-                }
-                else {
-                    adrr.style.border = "1px solid #ccc";
-                    adrr.style.backgroundColor = "lightgrey";
-                }
-            }
-            if (email.value == "") {
-                email.style.border = "1px solid rgb(255, 60, 60)";
-                email.style.backgroundColor = "rgb(255, 214, 214)";
+        inputs = document.getElementsByTagName("input");
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].value == "") {
+                inputs[i].style.border = "1px solid rgb(255, 60, 60)";
+                inputs[i].style.backgroundColor = "rgb(255, 214, 214)";
                 missingBool = true;
             }
             else {
-                email.style.border = "1px solid #ccc";
-                email.style.backgroundColor = "lightgrey";
-            }
-            if (password.value == "") {
-                password.style.border = "1px solid rgb(255, 60, 60)";
-                password.style.backgroundColor = "rgb(255, 214, 214)";
-                missingBool = true;
-            }
-            else {
-                password.style.border = "1px solid #ccc";
-                password.style.backgroundColor = "lightgrey";
+                inputs[i].style.border = "1px solid #ccc";
+                inputs[i].style.backgroundColor = "rgb(234, 246, 255)";
             }
         }
         //frägt ab ob alle daten vorhanden sind wenn nicht gibt es einen Text aus 
         let bod = document.getElementById("ErrorText");
         if (missingBool == false) {
             let formData = new FormData(document.forms[0]);
-            bod.innerHTML = "";
-            bod.style.width = "";
+            bod.innerHTML = "<p> Es könnte etwas dauern bis der Server antwortet, also haben sie bitte etwas Geduld </p>";
+            bod.style.width = "50%";
             getSMessage(formData);
         }
         else {
@@ -78,6 +34,7 @@ var Abgabe3;
             bod.style.width = "50%";
         }
     }
+    //Sendet eine anfrage an den server und erwartet einen Rückantwort
     async function getSMessage(_formdata) {
         let path = getPage();
         let url = "https://gisfelixfex.herokuapp.com/" + path;
@@ -90,6 +47,7 @@ var Abgabe3;
         console.log(message);
         showServerMessage2(message);
     }
+    //Zeigt die Antwort an
     function showServerMessage2(_message) {
         let bod = document.getElementById("ErrorText");
         bod.innerHTML = _message;
