@@ -1,15 +1,13 @@
 
 namespace Abgabe3 {
-    
+
     function getPage(): string {
         return window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1);
     }
 
-    
     let subButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("submitData");
     subButton.addEventListener("click", setValue);
-    
-    
+
     function setValue(): void {
         let fname: HTMLInputElement = <HTMLInputElement>document.getElementById("fname");
         let lname: HTMLInputElement = <HTMLInputElement>document.getElementById("lname");
@@ -20,15 +18,15 @@ namespace Abgabe3 {
         let page: string = getPage();
 
         let missingBool: boolean = false;
-        
-        //checkt die verschiedenen eingabefelder und makiert sie fals etwas fehlt
+
+        //checkt die verschiedenen Eingabefelder und makiert sie falls etwas fehlt
         if (page != "loaduser.html") {
             if (page == "index.html") {
                 if (fname.value == "") {
                     fname.style.border = "1px solid rgb(255, 60, 60)";
                     fname.style.backgroundColor = "rgb(255, 214, 214)";
                     missingBool = true;
-                }  else {
+                } else {
                     fname.style.border = "1px solid #ccc";
                     fname.style.backgroundColor = "lightgrey";
                 }
@@ -66,22 +64,22 @@ namespace Abgabe3 {
                 password.style.backgroundColor = "lightgrey";
             }
         }
-        
+
         //frägt ab ob alle daten vorhanden sind wenn nicht gibt es einen Text aus 
         let bod: HTMLElement = document.getElementById("ErrorText");
         if (missingBool == false) {
             let formData: FormData = new FormData(document.forms[0]);
-            bod.innerHTML = "";
-            bod.style.width = "";
+            bod.innerHTML = "Es könnte etwas dauern bis der Server antwortet, also haben sie bitte etwas Geduld";
+            bod.style.width = "50%";
             getSMessage(formData);
         } else {
             bod.innerHTML = "<p> Eingaben vergessen! Bitte alles rot makierte eintragen</p>";
             bod.style.width = "50%";
         }
-        
+
     }
 
-
+    //Sendet eine anfrage an den server und erwartet einen Rückantwort
     async function getSMessage(_formdata: FormData): Promise<void> {
         let path: string = getPage();
         let url: string = "https://gisfelixfex.herokuapp.com/" + path;
@@ -96,6 +94,7 @@ namespace Abgabe3 {
 
     }
 
+    //Zeigt die Antwort an
     function showServerMessage2(_message: string): void {
         let bod: HTMLElement = document.getElementById("ErrorText");
         bod.innerHTML = _message;

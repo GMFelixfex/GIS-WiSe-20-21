@@ -4,8 +4,6 @@ import * as Mongo from "mongodb";
 
 export namespace PServer {
 
-    let users: Mongo.Collection;
-
     class Person {
         vorname: string;
         nachname: string;
@@ -31,12 +29,16 @@ export namespace PServer {
         password: string;
     }
 
+    let users: Mongo.Collection;
+    
+    //Portfestlegung
     let port: number = Number(process.env.PORT);
     if (!port) {
         port = 8100;
 
     }
 
+    //URL-Auswahl
     let dbURL: string = "mongodb+srv://Felixfex:!Fex1341@forgisgm.koewa.mongodb.net/<dbname>?retryWrites=true&w=majority";
     console.log(process.argv.slice(2));
     if (process.argv.slice(2)[0] == "local") {
@@ -46,7 +48,7 @@ export namespace PServer {
     connectToDatabase(dbURL);
     startServer(port);
 
-    //Region: Functions Start
+    //#region Server Setup
     function startServer(_port: number | string): void {
         console.log("Starting server" + _port);
         let server: Http.Server = Http.createServer();
@@ -54,7 +56,7 @@ export namespace PServer {
         server.addListener("listening", handleListen);
         server.listen(_port);
     }
-
+    
     async function connectToDatabase(_url: string): Promise<void> {
         let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
         let mongoClient: Mongo.MongoClient = new Mongo.MongoClient(_url, options);
@@ -62,7 +64,9 @@ export namespace PServer {
         users = mongoClient.db("Test").collection("Users");
         console.log("Connection Established", users != undefined);
     }
+    //#endregion
 
+    //#region Request Handeling
     function handleListen(): void {
         console.log("Listening");
     }
@@ -78,46 +82,44 @@ export namespace PServer {
         let fun2: url.UrlWithParsedQuery = url.parse(fun, true);
         let fun3: typeof fun2.query = fun2.query;
         let persi: Person;
+        let sendString: string = "";
 
-        let sendstring: string = "";
-        for (let i: number = 0; i < findingsArray.length; i++) {
-            sendstring += "<p>" + findingsArray[i].vorname + " " + findingsArray[i].nachname + "</p>";
-        }
-
+        //Für die Registrierungsseite
         if (fun2.pathname == "/index.html") {
             persi = new Person(<string>fun3.fname, <string>fun3.lname, <string>fun3.adrr, <string>fun3.email, <string>fun3.password);
             let filterinput: string = await users.findOne({ "email": fun3.email });
             if (filterinput == null) {
                 users.insertOne(persi);
-                _response.write("<p> User created </p>");
-                _response.end();
+                sendString = "User created";
             } else {
-                _response.write("<p> User with that E-mail already exist </p>");
-                _response.end();
+                sendString = "User with that E-mail already exist";
             }
         }
 
+        //Für die Ausgabe seite
         if (fun2.pathname == "/loaduser.html") {
-            _response.write(sendstring);
-            _response.end();
+            for (let i: number = 0; i < findingsArray.length; i++) {
+                sendString += findingsArray[i].vorname + " " + findingsArray[i].nachname + "</br>";
+            }
         }
 
+        //Für die Einlog-Seite
         if (fun2.pathname == "/singin.html") {
             let filterinput: typeof users.findOne = await users.findOne({ "email": fun3.email, "password": fun3.password });
             let filterEmail: typeof users.findOne = await users.findOne({ "email": fun3.email });
 
-            let textBack: string = "";
             if (filterEmail != null) {
                 if (filterinput != null) {
-                    textBack = "Erfolgreich Eingelogt";
+                    sendString = "Erfolgreich Eingelogt";
                 } else {
-                    textBack = "Passwort ist falsch";
+                    sendString = "Passwort ist falsch";
                 }
             } else {
-                textBack = "Nutzer mit dieser Email existiert noch nicht Registrieren sie sich bitte";
+                sendString = "Nutzer mit dieser Email existiert noch nicht Registrieren sie sich bitte";
             }
-            _response.write("<p>" + textBack + "</p>");
-            _response.end();
         }
+
+        _response.write("<p>" + sendString + "</p>");
+        _response.end();
     }
 }
