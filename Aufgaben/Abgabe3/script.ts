@@ -33,7 +33,7 @@ namespace Abgabe3 {
             bod.style.width = "50%";
             getSMessage(formData);
         } else {
-            bod.innerHTML = "<p> Eingaben vergessen! Bitte alles rot makierte eintragen</p>";
+            bod.innerHTML = "<p> Eingaben vergessen! Bitte alles rot-markierte eintragen</p>";
             bod.style.width = "50%";
         }
     }

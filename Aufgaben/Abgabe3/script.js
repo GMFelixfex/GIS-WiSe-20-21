@@ -10,6 +10,7 @@ var Abgabe3;
         let inputs;
         let missingBool = false;
         inputs = document.getElementsByTagName("input");
+        //Tested ob etwas von den Eigaben fehlt
         for (let i = 0; i < inputs.length; i++) {
             if (inputs[i].value == "") {
                 inputs[i].style.border = "1px solid rgb(255, 60, 60)";
@@ -30,7 +31,7 @@ var Abgabe3;
             getSMessage(formData);
         }
         else {
-            bod.innerHTML = "<p> Eingaben vergessen! Bitte alles rot makierte eintragen</p>";
+            bod.innerHTML = "<p> Eingaben vergessen! Bitte alles rot-markierte eintragen</p>";
             bod.style.width = "50%";
         }
     }
