@@ -180,7 +180,7 @@ var Abgabe2;
     }
     function startButton() {
         localStorage.clear();
-        window.open("ihalter.html", "_self");
+        window.open("iHalter.html", "_self");
     }
     function backButton() {
         window.open("i" + pages[curSiteNumber] + ".html", "_self");
